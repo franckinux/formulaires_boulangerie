@@ -1,0 +1,50 @@
+Données d'entrée :
+tlf
+thp
+ptp # ptl
+
+On cherche à tout exprimer en fonction de pfl
+
+pf = pfl / tlf
+ptf = pf + pfl
+pte = ptf * thp
+pel = pfl * thl
+pe = pte - pel
+
+Elimination de pf
+
+ptf = pfl / tlf + pfl
+    = (1 / tlf + 1) * pfl
+pte = ptf * thp
+pel = pfl * thl
+pe = pte - pel
+
+Elimination de ptf
+
+pte = (pfl / tlf + pfl) * thp
+pel = pfl * thl
+pe = pte - pel
+
+Elimination de pte et pel
+
+pe = (pfl / tlf + pfl) * thp - pfl * thl
+   = [(1 / tlf + 1) * thp - thl] * pfl
+   = [(1 / tlf + 1) * thp - thl] * pfl
+
+
+pfl
+pf = pfl / tlf
+ptf = (1 / tlf + 1) * pfl
+pte = (1 / tlf + 1) * pfl * thp
+pel = pfl * thl
+pe = [(1 / tlf + 1) * thp - thl] * pfl
+
+Calcul de pfl si ptp imposé :
+
+ptp = ptf + pte
+ptp = ptf + ptf * thp
+    = (1 + thp) * ptf
+ptf = ptp / (1 + thp)
+(1 / tlf + 1) * pfl = ptp / (1 + thp)
+pfl = ptp / (1 + thp) / (1 / tlf + 1)
+    = ptp * tlf / (1 + thp) / (1 + tlf)
