@@ -149,6 +149,101 @@ class TabPoidsLevainImpose(wx.Panel):
                 pub.sendMessage("change_statusbar", msg="Données d'entrée incorrectes")
 
 
+class TabPoidsPateImpose(wx.Panel):
+
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+
+        sizer_top = wx.BoxSizer(wx.HORIZONTAL)
+
+        font = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.BOLD)
+
+        # entrées
+        sizer_entrees = wx.BoxSizer(wx.VERTICAL)
+
+        label_entrees = wx.StaticText(self, -1, "Données")
+        label_entrees.SetFont(font)
+
+        self.poids_pate = InputField(self, "Poids de la pâte", 1000, self.update)
+        self.th_pate = InputField(self, "Taux d'hydratation de la pâte", 60, self.update, min_max=(1, 100))
+        self.th_levain = InputField(self, "Taux d'hydratation du levain", 100, self.update, min_max=(1, 100))
+        self.taux_levain_farine = InputField(self, "Taux levain farine", 30, self.update, min_max=(1, 100))
+        inputs = [
+            self.poids_pate, self.th_pate, self.th_levain, self.taux_levain_farine
+        ]
+
+        grid_sizer = wx.FlexGridSizer(cols=2, hgap=6, vgap=6)
+        widgets = []
+        for inp in inputs:
+            widgets.extend(inp.get_widgets())
+
+        grid_sizer.AddMany(widgets)
+
+        sizer_entrees.Add(label_entrees, 0, wx.BOTTOM | wx.LEFT | wx.TOP, 10)
+        sizer_entrees.Add(grid_sizer, 0, wx.LEFT, 10)
+
+        # resultats
+        sizer_resultats = wx.BoxSizer(wx.VERTICAL)
+
+        label_resultats = wx.StaticText(self, -1, "Résultats")
+        label_resultats.SetFont(font)
+
+        self.label_poids_farine = wx.StaticText(self, -1)
+        self.label_poids_eau = wx.StaticText(self, -1)
+        self.label_poids_levain = wx.StaticText(self, -1)
+        self.label_poids_sel = wx.StaticText(self, -1)
+
+        grid_sizer = wx.FlexGridSizer(cols=2, hgap=6, vgap=6)
+        grid_sizer.AddMany(
+            [
+                wx.StaticText(self, -1, "Poids de la farine"),
+                self.label_poids_farine,
+                wx.StaticText(self, -1, "Poids de l'eau"),
+                self.label_poids_eau,
+                wx.StaticText(self, -1, "Poids du levain"),
+                self.label_poids_levain,
+                wx.StaticText(self, -1, "Poids du sel"),
+                self.label_poids_sel
+            ]
+        )
+
+        sizer_resultats.Add(label_resultats, 0, wx.BOTTOM | wx.TOP, 10)
+        sizer_resultats.Add(grid_sizer)
+
+        # top sizer
+        sizer_top.Add(sizer_entrees)
+        sizer_top.Add(
+            wx.StaticLine(self, style=wx.LI_VERTICAL), 0, wx.EXPAND | wx.ALL, 5
+        )
+        sizer_top.Add(sizer_resultats)
+        self.SetSizerAndFit(sizer_top)
+
+        self.update()
+
+    def update(self):
+        ptp = self.poids_pate.get_value()
+        thp = self.th_pate.get_value()
+        thl = self.th_levain.get_value()
+        tlf = self.taux_levain_farine.get_value()
+
+        if ptp != -1 and thp != -1 and thl != -1 and tlf != -1:
+            pf, pe, pl, ps = formules.calcul_eau_farine_levain(
+                ptp, thp / 100.0, thl / 100.0, tlf / 100.0
+            )
+            if pf > 0 and pe > 0:
+                self.label_poids_farine.SetLabel(str(pf))
+                self.label_poids_eau.SetLabel(str(pe))
+                self.label_poids_levain.SetLabel(str(pl))
+                self.label_poids_sel.SetLabel(str(ps))
+                pub.sendMessage("change_statusbar", msg="")
+            else:
+                self.label_poids_farine.SetLabel("")
+                self.label_poids_eau.SetLabel("")
+                self.label_poids_levain.SetLabel("")
+                self.label_poids_sel.SetLabel("")
+                pub.sendMessage("change_statusbar", msg="Données d'entrée incorrectes")
+
+
 class TestFrame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title=u"Formulaires de boulangerie", size=(500, 300))
@@ -159,6 +254,8 @@ class TestFrame(wx.Frame):
         notebook = wx.Notebook(panel)
         tab1 = TabPoidsLevainImpose(notebook)
         notebook.AddPage(tab1, "Poids du levain imposé")
+        tab2 = TabPoidsPateImpose(notebook)
+        notebook.AddPage(tab2, "Poids de la pâte imposé")
 
         sizer = wx.BoxSizer()
         sizer.Add(notebook, 1, wx.EXPAND)
