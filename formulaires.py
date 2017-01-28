@@ -54,7 +54,20 @@ class InputField:
         return self.value if not self.error else -1
 
 
-class TabPoidsLevainImpose(wx.Panel):
+class OutputField:
+
+    def __init__(self, parent, label):
+        self.static_text_label = wx.StaticText(parent, -1, label)
+        self.static_text_value = wx.StaticText(parent, -1)
+
+    def get_widgets(self):
+        return self.static_text_label, self.static_text_value
+
+    def set_value(self, value):
+        self.static_text_value.SetLabel(str(value))
+
+
+class TabCommon(wx.Panel):
 
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
@@ -63,25 +76,18 @@ class TabPoidsLevainImpose(wx.Panel):
 
         font = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.BOLD)
 
+        self.set_fields()
+
         # entrées
         sizer_entrees = wx.BoxSizer(wx.VERTICAL)
 
         label_entrees = wx.StaticText(self, -1, "Données")
         label_entrees.SetFont(font)
 
-        self.poids_levain = InputField(self, "Poids du levain", 150, self.update)
-        self.th_pate = InputField(self, "Taux d'hydratation de la pâte", 60, self.update, min_max=(1, 100))
-        self.th_levain = InputField(self, "Taux d'hydratation du levain", 100, self.update, min_max=(1, 100))
-        self.taux_levain_farine = InputField(self, "Taux levain farine", 30, self.update, min_max=(1, 100))
-        inputs = [
-            self.poids_levain, self.th_pate, self.th_levain, self.taux_levain_farine
-        ]
-
         grid_sizer = wx.FlexGridSizer(cols=2, hgap=6, vgap=6)
         widgets = []
-        for inp in inputs:
+        for inp in self.inputs:
             widgets.extend(inp.get_widgets())
-
         grid_sizer.AddMany(widgets)
 
         sizer_entrees.Add(label_entrees, 0, wx.BOTTOM | wx.LEFT | wx.TOP, 10)
@@ -93,24 +99,11 @@ class TabPoidsLevainImpose(wx.Panel):
         label_resultats = wx.StaticText(self, -1, "Résultats")
         label_resultats.SetFont(font)
 
-        self.label_poids_farine = wx.StaticText(self, -1)
-        self.label_poids_eau = wx.StaticText(self, -1)
-        self.label_poids_pate = wx.StaticText(self, -1)
-        self.label_poids_sel = wx.StaticText(self, -1)
-
         grid_sizer = wx.FlexGridSizer(cols=2, hgap=6, vgap=6)
-        grid_sizer.AddMany(
-            [
-                wx.StaticText(self, -1, "Poids de la farine"),
-                self.label_poids_farine,
-                wx.StaticText(self, -1, "Poids de l'eau"),
-                self.label_poids_eau,
-                wx.StaticText(self, -1, "Poids de la pâte"),
-                self.label_poids_pate,
-                wx.StaticText(self, -1, "Poids du sel"),
-                self.label_poids_sel
-            ]
-        )
+        widgets = []
+        for out in self.outputs:
+            widgets.extend(out.get_widgets())
+        grid_sizer.AddMany(widgets)
 
         sizer_resultats.Add(label_resultats, 0, wx.BOTTOM | wx.TOP, 10)
         sizer_resultats.Add(grid_sizer)
@@ -124,6 +117,29 @@ class TabPoidsLevainImpose(wx.Panel):
         self.SetSizerAndFit(sizer_top)
 
         self.update()
+
+
+class TabPoidsLevainImpose(TabCommon):
+
+    def __init__(self, parent):
+        super(TabPoidsLevainImpose, self).__init__(parent)
+
+    def set_fields(self):
+        self.poids_levain = InputField(self, "Poids du levain", 150, self.update)
+        self.th_pate = InputField(self, "Taux d'hydratation de la pâte", 60, self.update, min_max=(1, 100))
+        self.th_levain = InputField(self, "Taux d'hydratation du levain", 100, self.update, min_max=(1, 100))
+        self.taux_levain_farine = InputField(self, "Taux levain farine", 30, self.update, min_max=(1, 100))
+        self.inputs = [
+            self.poids_levain, self.th_pate, self.th_levain, self.taux_levain_farine
+        ]
+
+        self.poids_farine = OutputField(self, "Poids de la farine")
+        self.poids_eau = OutputField(self, "Poids de l'eau")
+        self.poids_pate = OutputField(self, "Poids de la pâte")
+        self.poids_sel = OutputField(self, "Poids du sel")
+        self.outputs = [
+            self.poids_farine, self.poids_eau, self.poids_pate, self.poids_sel
+        ]
 
     def update(self):
         pl = self.poids_levain.get_value()
@@ -136,89 +152,40 @@ class TabPoidsLevainImpose(wx.Panel):
                 pl, thp / 100.0, thl / 100.0, tlf / 100.0
             )
             if pf > 0 and pe > 0:
-                self.label_poids_farine.SetLabel(str(pf))
-                self.label_poids_eau.SetLabel(str(pe))
-                self.label_poids_pate.SetLabel(str(ptp))
-                self.label_poids_sel.SetLabel(str(ps))
+                self.poids_farine.set_value(pf)
+                self.poids_eau.set_value(pe)
+                self.poids_pate.set_value(ptp)
+                self.poids_sel.set_value(ps)
                 pub.sendMessage("change_statusbar", msg="")
             else:
-                self.label_poids_farine.SetLabel("")
-                self.label_poids_eau.SetLabel("")
-                self.label_poids_pate.SetLabel("")
-                self.label_poids_sel.SetLabel("")
+                self.poids_farine.set_value("")
+                self.poids_eau.set_value("")
+                self.poids_pate.set_value("")
+                self.poids_sel.set_value("")
                 pub.sendMessage("change_statusbar", msg="Données d'entrée incorrectes")
 
 
-class TabPoidsPateImpose(wx.Panel):
+class TabPoidsPateImpose(TabCommon):
 
     def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
+        super(TabPoidsPateImpose, self).__init__(parent)
 
-        sizer_top = wx.BoxSizer(wx.HORIZONTAL)
-
-        font = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.BOLD)
-
-        # entrées
-        sizer_entrees = wx.BoxSizer(wx.VERTICAL)
-
-        label_entrees = wx.StaticText(self, -1, "Données")
-        label_entrees.SetFont(font)
-
+    def set_fields(self):
         self.poids_pate = InputField(self, "Poids de la pâte", 1000, self.update)
         self.th_pate = InputField(self, "Taux d'hydratation de la pâte", 60, self.update, min_max=(1, 100))
         self.th_levain = InputField(self, "Taux d'hydratation du levain", 100, self.update, min_max=(1, 100))
         self.taux_levain_farine = InputField(self, "Taux levain farine", 30, self.update, min_max=(1, 100))
-        inputs = [
+        self.inputs = [
             self.poids_pate, self.th_pate, self.th_levain, self.taux_levain_farine
         ]
 
-        grid_sizer = wx.FlexGridSizer(cols=2, hgap=6, vgap=6)
-        widgets = []
-        for inp in inputs:
-            widgets.extend(inp.get_widgets())
-
-        grid_sizer.AddMany(widgets)
-
-        sizer_entrees.Add(label_entrees, 0, wx.BOTTOM | wx.LEFT | wx.TOP, 10)
-        sizer_entrees.Add(grid_sizer, 0, wx.LEFT, 10)
-
-        # resultats
-        sizer_resultats = wx.BoxSizer(wx.VERTICAL)
-
-        label_resultats = wx.StaticText(self, -1, "Résultats")
-        label_resultats.SetFont(font)
-
-        self.label_poids_farine = wx.StaticText(self, -1)
-        self.label_poids_eau = wx.StaticText(self, -1)
-        self.label_poids_levain = wx.StaticText(self, -1)
-        self.label_poids_sel = wx.StaticText(self, -1)
-
-        grid_sizer = wx.FlexGridSizer(cols=2, hgap=6, vgap=6)
-        grid_sizer.AddMany(
-            [
-                wx.StaticText(self, -1, "Poids de la farine"),
-                self.label_poids_farine,
-                wx.StaticText(self, -1, "Poids de l'eau"),
-                self.label_poids_eau,
-                wx.StaticText(self, -1, "Poids du levain"),
-                self.label_poids_levain,
-                wx.StaticText(self, -1, "Poids du sel"),
-                self.label_poids_sel
-            ]
-        )
-
-        sizer_resultats.Add(label_resultats, 0, wx.BOTTOM | wx.TOP, 10)
-        sizer_resultats.Add(grid_sizer)
-
-        # top sizer
-        sizer_top.Add(sizer_entrees)
-        sizer_top.Add(
-            wx.StaticLine(self, style=wx.LI_VERTICAL), 0, wx.EXPAND | wx.ALL, 5
-        )
-        sizer_top.Add(sizer_resultats)
-        self.SetSizerAndFit(sizer_top)
-
-        self.update()
+        self.poids_farine = OutputField(self, "Poids de la farine")
+        self.poids_eau = OutputField(self, "Poids de l'eau")
+        self.poids_levain = OutputField(self, "Poids de levain")
+        self.poids_sel = OutputField(self, "Poids du self")
+        self.outputs = [
+            self.poids_farine, self.poids_eau, self.poids_levain, self.poids_sel
+        ]
 
     def update(self):
         ptp = self.poids_pate.get_value()
@@ -231,20 +198,20 @@ class TabPoidsPateImpose(wx.Panel):
                 ptp, thp / 100.0, thl / 100.0, tlf / 100.0
             )
             if pf > 0 and pe > 0:
-                self.label_poids_farine.SetLabel(str(pf))
-                self.label_poids_eau.SetLabel(str(pe))
-                self.label_poids_levain.SetLabel(str(pl))
-                self.label_poids_sel.SetLabel(str(ps))
+                self.poids_farine.set_value(pf)
+                self.poids_eau.set_value(pe)
+                self.poids_levain.set_value(pl)
+                self.poids_sel.set_value(ps)
                 pub.sendMessage("change_statusbar", msg="")
             else:
-                self.label_poids_farine.SetLabel("")
-                self.label_poids_eau.SetLabel("")
-                self.label_poids_levain.SetLabel("")
-                self.label_poids_sel.SetLabel("")
+                self.poids_farine.set_value("")
+                self.poids_eau.set_value("")
+                self.poids_levain.set_value("")
+                self.poids_sel.set_value("")
                 pub.sendMessage("change_statusbar", msg="Données d'entrée incorrectes")
 
 
-class TestFrame(wx.Frame):
+class Frame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title=u"Formulaires de boulangerie", size=(500, 300))
         self.createMenuBar()
@@ -274,7 +241,7 @@ class TestFrame(wx.Frame):
         fileMenu.Append(wx.ID_EXIT, "Quitter\tCtrl+Q")
         self.Bind(wx.EVT_MENU, lambda x: self.Destroy(), id=wx.ID_EXIT)
         helpMenu = wx.Menu()
-        helpMenu.Append(wx.ID_ABOUT, "A propos de Production")
+        helpMenu.Append(wx.ID_ABOUT, "A propos de Formulaires")
         self.Bind(wx.EVT_MENU, self.onShowAbout, id=wx.ID_ABOUT)
         menubar.SetMenus([(fileMenu, "Fichier"), (helpMenu, "Help")])
         self.SetMenuBar(menubar)
@@ -286,14 +253,14 @@ class TestFrame(wx.Frame):
         info = AboutDialogInfo()
         info.SetVersion("1.0")
         info.SetName("Production")
-        info.SetDescription("Formuliares de boulanboub")
+        info.SetDescription("Formulaires de boulangerie")
         info.SetCopyright(u"Franck Barbenoire (2017)")
         AboutBox(info)
 
 
 class TestApp(wx.App):
     def OnInit(self):
-        frame = TestFrame()
+        frame = Frame()
         frame.Show()
         frame.Layout()
         return True
