@@ -167,9 +167,6 @@ class TabPoidsLevainImpose(TabCommon):
 
 class TabPoidsPateImpose(TabCommon):
 
-    def __init__(self, parent):
-        super(TabPoidsPateImpose, self).__init__(parent)
-
     def set_fields(self):
         self.poids_pate = InputField(self, "Poids de la pâte", 1000, self.update)
         self.th_pate = InputField(self, "Taux d'hydratation de la pâte", 60, self.update, min_max=(1, 100))
