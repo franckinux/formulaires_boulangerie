@@ -6,14 +6,15 @@
 from jinja2 import Environment, FileSystemLoader
 import os
 from tempfile import NamedTemporaryFile
+from textwrap import wrap
 import webbrowser
 import wx
+from wx.adv import AboutDialogInfo, AboutBox
 from wx.lib.pubsub import pub
 
 import formules
 
-from wx.adv import AboutDialogInfo, AboutBox
-wx.EmptyImage = wx.Image  # EmptyImage has been removed in phoenix.
+wx.EmptyImage = wx.Image  # EmptyImage has been removed in phoenix
 
 
 class InputField:
@@ -315,10 +316,21 @@ class Frame(wx.Frame):
 
     def on_show_about(self, evt):
         info = AboutDialogInfo()
-        info.SetVersion("1.0")
-        info.SetName("Formulaires")
-        info.SetDescription("Formulaires de boulangerie")
+        info.SetDescription(
+            '\n'.join(
+                wrap(
+                    "Ces formulaires vous proposent différents calculs "
+                    "relatifs aux taux d'hydratation de la pâte et du levain",
+                    width=50
+                ),
+            ),
+        )
+        info.SetDevelopers(["Franck Barbenoire"])
         info.SetCopyright(u"Franck Barbenoire (2017)")
+        info.SetLicense(u"GPL 3.0")
+        info.SetName("Formulaires de boulangerie")
+        info.SetVersion("1.0")
+        info.SetWebSite("https://github.com/franckinux/formulaires_boulangerie", "")
         AboutBox(info)
 
     def change_statusbar(self, msg):
