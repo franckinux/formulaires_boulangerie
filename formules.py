@@ -19,23 +19,7 @@ départ :
 
 import argparse
 
-
-def saisie_taux():
-    """
-    Saisie des différents taux :
-        - taux d'hydratation de la pâte
-        - taux d'hydratation du levain
-        - taux de levain par rapport à la farine
-    Conversion dans l'intervalle [0-1]
-    """
-    thp = input("Taux d'hydratation de la pâte (%) : ")
-    thp = float(thp) / 100
-    thl = input("Taux d'hydratation du levain (%) : ")
-    thl = float(thl) / 100
-    tlf = input("Taux de farine du levain par rapport à la farine (%) : ")
-    tlf = float(tlf) / 100
-    return thp, thl, tlf
-
+# début des formules
 
 def calcul_eau_farine(thp, thl, tlf, pfl):
     """Calcule le poids de l'eau et le poids de la farine en fonction :
@@ -61,6 +45,53 @@ def calcul_eau_farine_levain(ptp, thp, thl, tlf):
     return round(pf, 1), round(pe, 1), round(pl, 1), round(ps, 1)
 
 
+def calcul_eau_farine_pate(pl, thp, thl, tlf):
+    """Calcule les poids de la farine, de l'eau et de la pâte
+    >>> calcul_eau_farine_pate(200, 0.6, 1.0, 0.25)
+    (400.0, 200.0, 800.0, 10.0)
+    """
+    pfl = pl / (1 + thl)
+    pf, pe = calcul_eau_farine(thp, thl, tlf, pfl)
+    ptp = pl + pf + pe
+    ps = (pf + pfl) * 0.02
+    return round(pf, 1), round(pe, 1), round(ptp, 1), round(ps, 1)
+
+
+def calcul_eau_farine_levain2(ptf, pte, thl, tlf):
+    """Calcule les poids de la farine, de l'eau et du levain
+    >>> calcul_eau_farine_levain2(500, 300, 0.7, 0.4)
+    (429.3, 199.0, 171.7, 10.0)
+    """
+    pf = ptf / (1 + tlf / (1 + 1 / thl))
+    pe = pte - ptf * tlf / (1 + (1 + tlf) * thl)
+    pl = pf * tlf
+
+    ps = ptf * 0.02
+    return round(pf, 1), round(pe, 1), round(pl, 1), round(ps, 1)
+
+# fin des formules
+
+
+def saisie_taux(pate=True):
+    """
+    Saisie des différents taux :
+        - taux d'hydratation de la pâte
+        - taux d'hydratation du levain
+        - taux de levain par rapport à la farine
+    Conversion dans l'intervalle [0-1]
+    """
+    if pate:
+        thp = input("Taux d'hydratation de la pâte (%) : ")
+        thp = float(thp) / 100
+    else:
+        thp = None
+    thl = input("Taux d'hydratation du levain (%) : ")
+    thl = float(thl) / 100
+    tlf = input("Taux de farine du levain par rapport à la farine (%) : ")
+    tlf = float(tlf) / 100
+    return thp, thl, tlf
+
+
 def pate():
     ptp = input("Poids de la pâte à obtenir : ")
     ptp = float(ptp)
@@ -75,18 +106,6 @@ def pate():
         print("Poids d'eau : %.1f" % pe)
         print("Poids du levain : %.1f" % pl)
         print("Poids du sel (2%% du poids total de farine) : %.1f" % ps)
-
-
-def calcul_eau_farine_pate(pl, thp, thl, tlf):
-    """Calcule les poids de la farine, de l'eau et de la pâte
-    >>> calcul_eau_farine_pate(200, 0.6, 1.0, 0.25)
-    (400.0, 200.0, 800.0, 10.0)
-    """
-    pfl = pl / (1 + thl)
-    pf, pe = calcul_eau_farine(thp, thl, tlf, pfl)
-    ptp = pl + pf + pe
-    ps = (pf + pfl) * 0.02
-    return round(pf, 1), round(pe, 1), round(ptp, 1), round(ps, 1)
 
 
 def levain():
@@ -105,12 +124,32 @@ def levain():
         print("Poids du sel (2%% du poids total de farine) : %.1f" % ps)
 
 
+def equivalence():
+    ptf = input("Poids de la farine : ")
+    ptf = float(ptf)
+    pte = input("Poids de l'eau : ")
+    pte = float(pte)
+
+    thp, thl, tlf = saisie_taux(pate=False)
+    pf, pe, pl, ps = calcul_eau_farine_levain2(ptf, pte, thl, tlf)
+
+    if pe < 0:
+        print("\nIncompatibililté des taux d'hydratation")
+    else:
+        print("\nPoids de farine : %.1f" % pf)
+        print("Poids d'eau : %.1f" % pe)
+        print("Poids du levain : %.1f" % pl)
+        print("Poids du sel (2%% du poids total de farine) : %.1f" % ps)
+
+
 def main():
-    choix = input("Poids total ou poids du levain (t/l) : ")
+    choix = input("Poids total / poids du levain / equivalence (t/l/e) : ")
     if choix == 't':
         pate()
     elif choix == 'l':
         levain()
+    elif choix == 'e':
+        equivalence()
 
 
 if __name__ == "__main__":
@@ -118,6 +157,7 @@ if __name__ == "__main__":
     parser.add_argument('-t', "--test", action="store_true", help="passer les tests")
     parser.add_argument('-p', "--pate", action="store_true", help="poids de la pâte imposé")
     parser.add_argument('-l', "--levain", action="store_true", help="poids du levain imposé")
+    parser.add_argument('-e', "--equivalence", action="store_true", help="équivalence")
     args = parser.parse_args()
 
     if args.test:
@@ -127,5 +167,7 @@ if __name__ == "__main__":
         levain()
     elif args.pate:
         pate()
+    elif args.equivalence:
+        equivalence()
     else:
         main()

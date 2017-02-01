@@ -256,6 +256,58 @@ class TabPoidsPateImpose(TabCommon):
                 pub.sendMessage("change_statusbar", msg="Données d'entrée incorrectes")
 
 
+class TabEquivalence(TabCommon):
+
+    def __init__(self, parent):
+        self.result = False
+        super(TabEquivalence, self).__init__(parent)
+
+    def set_fields(self):
+        self.poids_total_farine = InputField(self, "Poids de la farine", 500, self.update)
+        self.poids_total_eau = InputField(self, "Poids de l'eau", 300, self.update)
+        self.th_levain = InputField(self, "Taux d'hydratation du levain", 100, self.update, min_max=(1, 100))
+        self.taux_levain_farine = InputField(self, "Taux levain farine", 30, self.update, min_max=(1, 100))
+        self.inputs = [
+            self.poids_total_farine, self.poids_total_eau,
+            self.th_levain, self.taux_levain_farine
+        ]
+
+        self.poids_farine = OutputField(self, "Poids de la farine")
+        self.poids_eau = OutputField(self, "Poids de l'eau")
+        self.poids_levain = OutputField(self, "Poids de levain")
+        self.poids_sel = OutputField(self, "Poids du self")
+        self.outputs = [
+            self.poids_farine, self.poids_eau, self.poids_levain, self.poids_sel
+        ]
+
+    def update(self):
+        ptf = self.poids_total_farine.get_value()
+        pte = self.poids_total_eau.get_value()
+        thl = self.th_levain.get_value()
+        tlf = self.taux_levain_farine.get_value()
+
+        if ptf != -1 and pte != -1 and thl != -1 and tlf != -1:
+            pf, pe, pl, ps = formules.calcul_eau_farine_levain2(
+                ptf, pte, thl / 100.0, tlf / 100.0
+            )
+            if pf > 0 and pe > 0:
+                self.poids_farine.set_value(pf)
+                self.poids_eau.set_value(pe)
+                self.poids_levain.set_value(pl)
+                self.poids_sel.set_value(ps)
+
+                self.result = True
+                pub.sendMessage("change_statusbar", msg="")
+            else:
+                self.poids_farine.set_value("")
+                self.poids_eau.set_value("")
+                self.poids_levain.set_value("")
+                self.poids_sel.set_value("")
+
+                self.result = False
+                pub.sendMessage("change_statusbar", msg="Données d'entrée incorrectes")
+
+
 class Frame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title=u"Formulaires de boulangerie", size=(550, 350))
@@ -268,7 +320,9 @@ class Frame(wx.Frame):
         self.notebook.AddPage(tab1, "Poids du levain imposé")
         tab2 = TabPoidsPateImpose(self.notebook)
         self.notebook.AddPage(tab2, "Poids de la pâte imposé")
-        self.tabs = [tab1, tab2]
+        tab3 = TabEquivalence(self.notebook)
+        self.notebook.AddPage(tab3, "Équivalence")
+        self.tabs = [tab1, tab2, tab3]
 
         sizer = wx.BoxSizer()
         sizer.Add(self.notebook, 1, wx.EXPAND)
