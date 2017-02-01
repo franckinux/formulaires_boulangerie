@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 from jinja2 import Environment, FileSystemLoader
 import os
@@ -10,11 +9,8 @@ from wx.lib.pubsub import pub
 
 import formules
 
-if "phoenix" in wx.version():
-    from wx.adv import AboutDialogInfo, AboutBox
-    wx.EmptyImage = wx.Image  # EmptyImage has been removed in phoenix.
-else:
-    from wx import AboutDialogInfo, AboutBox
+from wx.adv import AboutDialogInfo, AboutBox
+wx.EmptyImage = wx.Image  # EmptyImage has been removed in phoenix.
 
 
 class InputField:
@@ -259,7 +255,7 @@ class TabPoidsPateImpose(TabCommon):
 class Frame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title=u"Formulaires de boulangerie", size=(550, 350))
-        self.createMenuBar()
+        self.create_menu_bar()
 
         panel = wx.Panel(self)
 
@@ -281,18 +277,18 @@ class Frame(wx.Frame):
 
         pub.subscribe(self.change_statusbar, 'change_statusbar')
 
-    def createMenuBar(self):
+    def create_menu_bar(self):
         menubar = wx.MenuBar()
 
         fileMenu = wx.Menu()
         fileMenu.Append(wx.ID_PRINT, "Imprimer\tCtrl+I")
-        self.Bind(wx.EVT_MENU, self.onPrint, id=wx.ID_PRINT)
+        self.Bind(wx.EVT_MENU, self.on_print, id=wx.ID_PRINT)
         fileMenu.Append(wx.ID_EXIT, "Quitter\tCtrl+Q")
         self.Bind(wx.EVT_MENU, lambda x: self.Destroy(), id=wx.ID_EXIT)
 
         helpMenu = wx.Menu()
         helpMenu.Append(wx.ID_ABOUT, "A propos de Formulaires")
-        self.Bind(wx.EVT_MENU, self.onShowAbout, id=wx.ID_ABOUT)
+        self.Bind(wx.EVT_MENU, self.on_show_about, id=wx.ID_ABOUT)
 
         menubar.SetMenus([
             (fileMenu, "Fichier"),
@@ -300,7 +296,7 @@ class Frame(wx.Frame):
         ])
         self.SetMenuBar(menubar)
 
-    def onPrint(self, evt):
+    def on_print(self, evt):
         idx = self.notebook.GetSelection()
         if idx != wx.NOT_FOUND:
             page = self.tabs[idx]
@@ -314,7 +310,7 @@ class Frame(wx.Frame):
             url = "file://" + f.name
         webbrowser.open(url, new=2)
 
-    def onShowAbout(self, evt):
+    def on_show_about(self, evt):
         info = AboutDialogInfo()
         info.SetVersion("1.0")
         info.SetName("Formulaires")
