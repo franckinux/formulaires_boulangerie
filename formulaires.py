@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 from jinja2 import Environment, FileSystemLoader
 import os
+from tempfile import NamedTemporaryFile
+import webbrowser
 import wx
 from wx.lib.pubsub import pub
-from wx.html import HtmlWindow
 
 import formules
 
@@ -15,18 +15,6 @@ if "phoenix" in wx.version():
     wx.EmptyImage = wx.Image  # EmptyImage has been removed in phoenix.
 else:
     from wx import AboutDialogInfo, AboutBox
-
-
-class MyHtmlFrame(wx.Frame):
-
-    def __init__(self, parent, source):
-        wx.Frame.__init__(self, parent, -1, "Html preview")
-        html = HtmlWindow(self)
-
-        if "gtk2" in wx.PlatformInfo:
-            html.SetStandardFonts()
-
-        html.SetPage(source)
 
 
 class InputField:
@@ -270,7 +258,7 @@ class TabPoidsPateImpose(TabCommon):
 
 class Frame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title=u"Formulaires de boulangerie", size=(500, 300))
+        wx.Frame.__init__(self, None, title=u"Formulaires de boulangerie", size=(550, 350))
         self.createMenuBar()
 
         panel = wx.Panel(self)
@@ -285,8 +273,6 @@ class Frame(wx.Frame):
         sizer = wx.BoxSizer()
         sizer.Add(self.notebook, 1, wx.EXPAND)
         panel.SetSizer(sizer)
-
-        # self.html = HtmlWindow(self)
 
         self.statusbar = self.CreateStatusBar()
         self.statusbar.SetForegroundColour("RED")
@@ -320,14 +306,13 @@ class Frame(wx.Frame):
             page = self.tabs[idx]
             if page.result:
                 title = self.notebook.GetPageText(idx)
-                self.print_(page.to_html(title))
+                self.display(page.to_html(title))
 
-    def print_(self, html):
-        # with open("voir.html", "w") as f:
-        #     f.write(html)
-        # self.html.SetPage(html)
-        frm = MyHtmlFrame(None, html)
-        frm.Show()
+    def display(self, html):
+        with NamedTemporaryFile(delete=False, encoding="utf-8", mode="w") as f:
+            f.write(html)
+            url = "file://" + f.name
+        webbrowser.open(url, new=2)
 
     def onShowAbout(self, evt):
         info = AboutDialogInfo()
