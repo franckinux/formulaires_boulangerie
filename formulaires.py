@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 
 
+from jinja2 import Environment, FileSystemLoader
+import os
 import wx
 from wx.lib.pubsub import pub
+from wx.html import HtmlWindow
 
 import formules
 
@@ -12,6 +15,18 @@ if "phoenix" in wx.version():
     wx.EmptyImage = wx.Image  # EmptyImage has been removed in phoenix.
 else:
     from wx import AboutDialogInfo, AboutBox
+
+
+class MyHtmlFrame(wx.Frame):
+
+    def __init__(self, parent, source):
+        wx.Frame.__init__(self, parent, -1, "Html preview")
+        html = HtmlWindow(self)
+
+        if "gtk2" in wx.PlatformInfo:
+            html.SetStandardFonts()
+
+        html.SetPage(source)
 
 
 class InputField:
@@ -23,7 +38,7 @@ class InputField:
         self.label = label
         self.process = process
         self.min_max = min_max
-        self.value = value
+        self.value = float(value)
         self.error = False
 
     def get_widgets(self):
@@ -50,6 +65,9 @@ class InputField:
         if not self.error:
             self.process()
 
+    def get_label(self):
+        return self.label
+
     def get_value(self):
         return self.value if not self.error else -1
 
@@ -59,6 +77,7 @@ class OutputField:
     def __init__(self, parent, label):
         self.static_text_label = wx.StaticText(parent, -1, label)
         self.static_text_value = wx.StaticText(parent, -1)
+        self.label = label
         self.value = -1
 
     def get_widgets(self):
@@ -68,6 +87,9 @@ class OutputField:
         self.value = value
         self.static_text_value.SetLabel(str(value))
 
+    def get_label(self):
+        return self.label
+
     def get_value(self):
         return self.value
 
@@ -76,7 +98,10 @@ class TabCommon(wx.Panel):
 
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
+        self.init_ui(parent)
+        self.init_html()
 
+    def init_ui(self, parent):
         sizer_top = wx.BoxSizer(wx.HORIZONTAL)
 
         font = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.BOLD)
@@ -123,8 +148,22 @@ class TabCommon(wx.Panel):
 
         self.update()
 
+    def init_html(self):
+        path = os.path.dirname(os.path.abspath(__file__))
+        self.env = Environment(
+            autoescape=True,
+            loader=FileSystemLoader(os.path.join(path, 'templates'))
+        )
+
     def to_html(self, title):
-		pass
+        context = {
+            "title": title,
+            "fields": {
+                "inputs": self.inputs,
+                "outputs": self.outputs
+            }
+        }
+        return(self.env.get_template("double-columns.html").render(context))
 
 
 class TabPoidsLevainImpose(TabCommon):
@@ -247,6 +286,8 @@ class Frame(wx.Frame):
         sizer.Add(self.notebook, 1, wx.EXPAND)
         panel.SetSizer(sizer)
 
+        # self.html = HtmlWindow(self)
+
         self.statusbar = self.CreateStatusBar()
         self.statusbar.SetForegroundColour("RED")
 
@@ -282,7 +323,11 @@ class Frame(wx.Frame):
                 self.print_(page.to_html(title))
 
     def print_(self, html):
-        pass
+        # with open("voir.html", "w") as f:
+        #     f.write(html)
+        # self.html.SetPage(html)
+        frm = MyHtmlFrame(None, html)
+        frm.Show()
 
     def onShowAbout(self, evt):
         info = AboutDialogInfo()

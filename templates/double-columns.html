@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset=utf-8 />
+      <title>{{ title }}</title>
+      <link rel="stylesheet" type="text/css" href="css/style.css">
+   </head>
+   <body>
+
+      <div class="primary_column">
+         <div id="title_column">Données</div>
+	 <div id="label_column" class="secondary_column">
+{% for i in fields.inputs %}
+            <div>{{ i.get_label() }}</div>
+{% endfor %}
+	 </div>
+	 <div id="value_column" class="secondary_column">
+{% for i in fields.inputs %}
+            <div>{{ "{:,.1f}".format(i.get_value()).replace(',', ' ').replace('.', ',') }}</div>
+{% endfor %}
+	 </div>
+      </div>
+
+      <div id="outputs" class="primary_column">
+         <div id="title_column">Résultat</div>
+	 <div id="label_column" class="secondary_column">
+{% for o in fields.outputs %}
+            <div>{{ o.get_label() }}</div>
+{% endfor %}
+	 </div>
+	 <div id="value_column" class="secondary_column">
+{% for o in fields.outputs %}
+            <div>{{ "{:,.1f}".format(o.get_value()).replace(',', ' ').replace('.', ',') }}</div>
+{% endfor %}
+	 </div>
+      </div>
+
+   </body>
+</html>
