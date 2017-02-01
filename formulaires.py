@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# license : GPL 3.0
+# copyright : Franck Barbenoire (franck@barbenoi.re)
+
 from jinja2 import Environment, FileSystemLoader
 import os
 from tempfile import NamedTemporaryFile

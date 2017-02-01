@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
+# license : GPL 3.0
+# copyright : Franck Barbenoire (franck@barbenoi.re)
 
 """
 Ce programme propose deux types de calculs en fonction d'une contrainte de
