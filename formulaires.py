@@ -33,7 +33,7 @@ class InputField:
         try:
             value = float(self.text_ctrl.GetValue())
             if value <= 0:
-                raise ValueError("Negative value")
+                raise ValueError("Negative or null value")
             if self.min_max and not self.min_max[0] <= value <= self.min_max[1]:
                 raise ValueError("Out of range")
             self.value = value
@@ -59,12 +59,17 @@ class OutputField:
     def __init__(self, parent, label):
         self.static_text_label = wx.StaticText(parent, -1, label)
         self.static_text_value = wx.StaticText(parent, -1)
+        self.value = -1
 
     def get_widgets(self):
         return self.static_text_label, self.static_text_value
 
     def set_value(self, value):
+        self.value = value
         self.static_text_value.SetLabel(str(value))
+
+    def get_value(self):
+        return self.value
 
 
 class TabCommon(wx.Panel):
@@ -118,10 +123,14 @@ class TabCommon(wx.Panel):
 
         self.update()
 
+    def to_html(self, title):
+		pass
+
 
 class TabPoidsLevainImpose(TabCommon):
 
     def __init__(self, parent):
+        self.result = False
         super(TabPoidsLevainImpose, self).__init__(parent)
 
     def set_fields(self):
@@ -156,16 +165,24 @@ class TabPoidsLevainImpose(TabCommon):
                 self.poids_eau.set_value(pe)
                 self.poids_pate.set_value(ptp)
                 self.poids_sel.set_value(ps)
+
+                self.result = True
                 pub.sendMessage("change_statusbar", msg="")
             else:
                 self.poids_farine.set_value("")
                 self.poids_eau.set_value("")
                 self.poids_pate.set_value("")
                 self.poids_sel.set_value("")
+
+                self.result = False
                 pub.sendMessage("change_statusbar", msg="Données d'entrée incorrectes")
 
 
 class TabPoidsPateImpose(TabCommon):
+
+    def __init__(self, parent):
+        self.result = False
+        super(TabPoidsPateImpose, self).__init__(parent)
 
     def set_fields(self):
         self.poids_pate = InputField(self, "Poids de la pâte", 1000, self.update)
@@ -199,12 +216,16 @@ class TabPoidsPateImpose(TabCommon):
                 self.poids_eau.set_value(pe)
                 self.poids_levain.set_value(pl)
                 self.poids_sel.set_value(ps)
+
+                self.result = True
                 pub.sendMessage("change_statusbar", msg="")
             else:
                 self.poids_farine.set_value("")
                 self.poids_eau.set_value("")
                 self.poids_levain.set_value("")
                 self.poids_sel.set_value("")
+
+                self.result = False
                 pub.sendMessage("change_statusbar", msg="Données d'entrée incorrectes")
 
 
@@ -215,14 +236,15 @@ class Frame(wx.Frame):
 
         panel = wx.Panel(self)
 
-        notebook = wx.Notebook(panel)
-        tab1 = TabPoidsLevainImpose(notebook)
-        notebook.AddPage(tab1, "Poids du levain imposé")
-        tab2 = TabPoidsPateImpose(notebook)
-        notebook.AddPage(tab2, "Poids de la pâte imposé")
+        self.notebook = wx.Notebook(panel)
+        tab1 = TabPoidsLevainImpose(self.notebook)
+        self.notebook.AddPage(tab1, "Poids du levain imposé")
+        tab2 = TabPoidsPateImpose(self.notebook)
+        self.notebook.AddPage(tab2, "Poids de la pâte imposé")
+        self.tabs = [tab1, tab2]
 
         sizer = wx.BoxSizer()
-        sizer.Add(notebook, 1, wx.EXPAND)
+        sizer.Add(self.notebook, 1, wx.EXPAND)
         panel.SetSizer(sizer)
 
         self.statusbar = self.CreateStatusBar()
@@ -234,25 +256,44 @@ class Frame(wx.Frame):
 
     def createMenuBar(self):
         menubar = wx.MenuBar()
+
         fileMenu = wx.Menu()
+        fileMenu.Append(wx.ID_PRINT, "Imprimer\tCtrl+I")
+        self.Bind(wx.EVT_MENU, self.onPrint, id=wx.ID_PRINT)
         fileMenu.Append(wx.ID_EXIT, "Quitter\tCtrl+Q")
         self.Bind(wx.EVT_MENU, lambda x: self.Destroy(), id=wx.ID_EXIT)
+
         helpMenu = wx.Menu()
         helpMenu.Append(wx.ID_ABOUT, "A propos de Formulaires")
         self.Bind(wx.EVT_MENU, self.onShowAbout, id=wx.ID_ABOUT)
-        menubar.SetMenus([(fileMenu, "Fichier"), (helpMenu, "Help")])
+
+        menubar.SetMenus([
+            (fileMenu, "Fichier"),
+            (helpMenu, "Help")
+        ])
         self.SetMenuBar(menubar)
 
-    def change_statusbar(self, msg):
-        self.statusbar.SetStatusText(msg)
+    def onPrint(self, evt):
+        idx = self.notebook.GetSelection()
+        if idx != wx.NOT_FOUND:
+            page = self.tabs[idx]
+            if page.result:
+                title = self.notebook.GetPageText(idx)
+                self.print_(page.to_html(title))
+
+    def print_(self, html):
+        pass
 
     def onShowAbout(self, evt):
         info = AboutDialogInfo()
         info.SetVersion("1.0")
-        info.SetName("Production")
+        info.SetName("Formulaires")
         info.SetDescription("Formulaires de boulangerie")
         info.SetCopyright(u"Franck Barbenoire (2017)")
         AboutBox(info)
+
+    def change_statusbar(self, msg):
+        self.statusbar.SetStatusText(msg)
 
 
 class TestApp(wx.App):
