@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>title</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+      <!--
+        function calcule() {
+          var pl = document.form_pate.pl.value;
+          pl = pl * 1.0;
+          var thp = document.form_pate.thp.value;
+          thp = thp / 100;
+          var thl = document.form_pate.thl.value;
+          thl = thl / 100;
+          var tlf = document.form_pate.tlf.value;
+          tlf = tlf / 100;
+          var pfl =  pl / (1 + thl);
+          var pf = pfl / tlf;
+          var pe = (((1 / tlf) + 1) * thp - thl) * pfl;
+          var ptp = pf + pe + pl;
+          var ps = (pf + pfl) * 0.02;
+          if (pe < 0) {
+            document.getElementById('pf').innerHTML = "-";
+            document.getElementById('pe').innerHTML = "-";
+            document.getElementById('ptp').innerHTML = "-";
+            document.getElementById('ps').innerHTML = "-";
+          } else {
+            document.getElementById('pf').innerHTML = Math.round(pf*10)/10;
+            document.getElementById('pe').innerHTML = Math.round(pe*10)/10;
+            document.getElementById('ptp').innerHTML = Math.round(ptp*10)/10;
+            document.getElementById('ps').innerHTML = Math.round(ps*10)/10;
+         }
+       }
+      -->
+    </script>
+  </head>
+  <body onload="calcule()">
+    <form name="form_pate">
+      <table cellspacing="30">
+        <tr>
+          <td><b>Entrées</b></td>
+          <td><b>Résultats</b></td>
+        </tr>
+        <tr>
+          <td>
+            <table>
+              <tr>
+                <td>Poids du levain disponible</td>
+                <td><input type="text" name="pl" oninput="calcule()" size= "4" maxlength="4" value="150" alt="Poids du levain"></td>
+              </tr>
+              <tr>
+                <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
+                <td><input type="text" name="thp" oninput="calcule()" size= "3" maxlength="3" value="60" alt="Taux d'hydratation de la pâte"></td>
+              </tr>
+              <tr>
+                <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
+                <td><input type="text" name="thl" oninput="calcule()" size= "3" maxlength="3" value="100" alt="Taux d'hydratation du levain"></td>
+              </tr>
+              <tr>
+                <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
+                <td><input type="text" name="tlf"  oninput="calcule()"size="3" maxlength="3" value="30" alt="Taux de la farine du levain par rapport à la farine"></td>
+              </tr>
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr>
+                <td>Poids de la farine : </td>
+                <td width="60" id="pf"></td>
+              </tr>
+              <tr>
+                <td>Poids de l'eau : </td>
+                <td width="60" id="pe"></td>
+              </tr>
+              <tr>
+                <td>Poids de la pâte : </td>
+                <td width="60" id="ptp"></td>
+              </tr>
+              <tr>
+                <td>Poids du sel  <span style="font-size: smaller;">(2% du poids total de farine)</span></td>
+                <td width="60" id="ps"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </body>
+</html>

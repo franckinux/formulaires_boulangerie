@@ -265,8 +265,8 @@ class TabEquivalence(TabCommon):
     def set_fields(self):
         self.poids_total_farine = InputField(self, "Poids de la farine", 500, self.update)
         self.poids_total_eau = InputField(self, "Poids de l'eau", 300, self.update)
-        self.th_levain = InputField(self, "Taux d'hydratation du levain", 100, self.update, min_max=(1, 100))
-        self.taux_levain_farine = InputField(self, "Taux levain farine", 30, self.update, min_max=(1, 100))
+        self.th_levain = InputField(self, "Taux d'hydratation du levain", 70, self.update, min_max=(1, 100))
+        self.taux_levain_farine = InputField(self, "Taux levain farine", 40, self.update, min_max=(1, 100))
         self.inputs = [
             self.poids_total_farine, self.poids_total_eau,
             self.th_levain, self.taux_levain_farine
