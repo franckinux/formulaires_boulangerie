@@ -1,8 +1,12 @@
 <!DOCTYPE html>
+<!--
+license : GPL 3.0
+copyright : Franck Barbenoire (franck@barbenoi.re)
+-->
 <html lang="fr">
   <head>
     <meta charset="utf-8">
-    <title>title</title>
+    <title>Calcul pour la convertion du pain à la levure en pain au levain</title>
     <link rel="stylesheet" href="style.css">
     <script>
       <!--
@@ -35,55 +39,59 @@
     </script>
   </head>
   <body onload="calcule()">
-        <form name="form_pate">
-           <table cellspacing="30">
+    <p>Ce formulaire permet de convertir une recette de pain à la levure en une
+    recette de pain au levain.</p>
+    <p>Plus d'informations sur les formules appliquées sur
+    <a href="http://www.franck-barbenoire.fr/posts/2014/07/03/calcul-ingredients/">cette page</a>.</p>
+    <form name="form_pate">
+      <table cellspacing="30">
+        <tr>
+          <td><b>Entrées</b></td>
+          <td><b>Résultats</b></td>
+        </tr>
+        <tr>
+          <td>
+            <table>
               <tr>
-                 <td><b>Entrées</b></td>
-                 <td><b>Résultats</b></td>
+                <td>Poids de la pâte farine</td>
+                <td><input type="text" name="ptf" oninput="calcule()" size= "4" maxlength="4" value="500" alt="Poids de la pâte"></td>
               </tr>
               <tr>
-                 <td>
-                    <table>
-                       <tr>
-                          <td>Poids de la pâte farine</td>
-                          <td><input type="text" name="ptf" oninput="calcule()" size= "4" maxlength="4" value="500" alt="Poids de la pâte"></td>
-                       </tr>
-                       <tr>
-                          <td>Poids de l'eau</td>
-                          <td><input type="text" name="pte"oninput="calcule()" size= "4" maxlength="4" value="300" alt="Taux d'hydratation de la pâte"></td>
-                       </tr>
-                       <tr>
-                          <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                          <td><input type="text" name="thl"oninput="calcule()" size= "3" maxlength="3" value="70" alt="Taux d'hydratation du levain"></td>
-                       </tr>
-                       <tr>
-                          <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                          <td><input type="text" name="tlf" oninput="calcule()" size= "3" maxlength="3" value="40" alt="Taux de la farine du levain par rapport à la farine"></td>
-                       </tr>
-                    </table>
-                 </td>
-                 <td>
-                    <table>
-                       <tr>
-                          <td>Poids de la farine : </td>
-                          <td width="60" id="pf"></td>
-                       </tr>
-                       <tr>
-                          <td>Poids de l'eau : </td>
-                          <td width="60" id="pe"></td>
-                       </tr>
-                       <tr>
-                          <td>Poids du levain : </td>
-                          <td width="60" id="pl"></td>
-                       </tr>
-                       <tr>
-                          <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span> : </td>
-                          <td width="60" id="ps"></td>
-                       </tr>
-                    </table>
-                 </td>
+                <td>Poids de l'eau</td>
+                <td><input type="text" name="pte"oninput="calcule()" size= "4" maxlength="4" value="300" alt="Taux d'hydratation de la pâte"></td>
               </tr>
-           </table>
-        </form>
+              <tr>
+                <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
+                <td><input type="text" name="thl"oninput="calcule()" size= "3" maxlength="3" value="70" alt="Taux d'hydratation du levain"></td>
+              </tr>
+              <tr>
+                <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
+                <td><input type="text" name="tlf" oninput="calcule()" size= "3" maxlength="3" value="40" alt="Taux de la farine du levain par rapport à la farine"></td>
+              </tr>
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr>
+                <td>Poids de la farine : </td>
+                <td width="60" id="pf"></td>
+              </tr>
+              <tr>
+                <td>Poids de l'eau : </td>
+                <td width="60" id="pe"></td>
+              </tr>
+              <tr>
+                <td>Poids du levain : </td>
+                <td width="60" id="pl"></td>
+              </tr>
+              <tr>
+                <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span> : </td>
+                <td width="60" id="ps"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </form>
   </body>
 </html>
