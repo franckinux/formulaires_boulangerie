@@ -154,6 +154,57 @@ class TabCommon(wx.Panel):
         return(self.env.get_template("double-columns.html").render(context))
 
 
+class TabPoidsPateImpose(TabCommon):
+
+    def __init__(self, parent):
+        self.result = False
+        super(TabPoidsPateImpose, self).__init__(parent)
+
+    def set_fields(self):
+        self.poids_pate = InputField(self, "Poids de la pâte", 1000, self.update)
+        self.th_pate = InputField(self, "Taux d'hydratation de la pâte", 60, self.update, min_max=(1, 100))
+        self.th_levain = InputField(self, "Taux d'hydratation du levain", 100, self.update, min_max=(1, 100))
+        self.taux_levain_farine = InputField(self, "Taux levain farine", 30, self.update, min_max=(1, 100))
+        self.inputs = [
+            self.poids_pate, self.th_pate, self.th_levain, self.taux_levain_farine
+        ]
+
+        self.poids_farine = OutputField(self, "Poids de la farine")
+        self.poids_eau = OutputField(self, "Poids de l'eau")
+        self.poids_levain = OutputField(self, "Poids de levain")
+        self.poids_sel = OutputField(self, "Poids du sel")
+        self.outputs = [
+            self.poids_farine, self.poids_eau, self.poids_levain, self.poids_sel
+        ]
+
+    def update(self):
+        ptp = self.poids_pate.get_value()
+        thp = self.th_pate.get_value()
+        thl = self.th_levain.get_value()
+        tlf = self.taux_levain_farine.get_value()
+
+        if ptp != -1 and thp != -1 and thl != -1 and tlf != -1:
+            pf, pe, pl, ps = formules.calcul_pate_imposee(
+                ptp, thp / 100.0, thl / 100.0, tlf / 100.0
+            )
+            if pf > 0 and pe > 0:
+                self.poids_farine.set_value(pf)
+                self.poids_eau.set_value(pe)
+                self.poids_levain.set_value(pl)
+                self.poids_sel.set_value(ps)
+
+                self.result = True
+                pub.sendMessage("change_statusbar", msg="")
+            else:
+                self.poids_farine.set_value("")
+                self.poids_eau.set_value("")
+                self.poids_levain.set_value("")
+                self.poids_sel.set_value("")
+
+                self.result = False
+                pub.sendMessage("change_statusbar", msg="Données d'entrée incorrectes")
+
+
 class TabPoidsLevainImpose(TabCommon):
 
     def __init__(self, parent):
@@ -205,57 +256,6 @@ class TabPoidsLevainImpose(TabCommon):
                 pub.sendMessage("change_statusbar", msg="Données d'entrée incorrectes")
 
 
-class TabPoidsPateImpose(TabCommon):
-
-    def __init__(self, parent):
-        self.result = False
-        super(TabPoidsPateImpose, self).__init__(parent)
-
-    def set_fields(self):
-        self.poids_pate = InputField(self, "Poids de la pâte", 1000, self.update)
-        self.th_pate = InputField(self, "Taux d'hydratation de la pâte", 60, self.update, min_max=(1, 100))
-        self.th_levain = InputField(self, "Taux d'hydratation du levain", 100, self.update, min_max=(1, 100))
-        self.taux_levain_farine = InputField(self, "Taux levain farine", 30, self.update, min_max=(1, 100))
-        self.inputs = [
-            self.poids_pate, self.th_pate, self.th_levain, self.taux_levain_farine
-        ]
-
-        self.poids_farine = OutputField(self, "Poids de la farine")
-        self.poids_eau = OutputField(self, "Poids de l'eau")
-        self.poids_levain = OutputField(self, "Poids de levain")
-        self.poids_sel = OutputField(self, "Poids du self")
-        self.outputs = [
-            self.poids_farine, self.poids_eau, self.poids_levain, self.poids_sel
-        ]
-
-    def update(self):
-        ptp = self.poids_pate.get_value()
-        thp = self.th_pate.get_value()
-        thl = self.th_levain.get_value()
-        tlf = self.taux_levain_farine.get_value()
-
-        if ptp != -1 and thp != -1 and thl != -1 and tlf != -1:
-            pf, pe, pl, ps = formules.calcul_pate_imposee(
-                ptp, thp / 100.0, thl / 100.0, tlf / 100.0
-            )
-            if pf > 0 and pe > 0:
-                self.poids_farine.set_value(pf)
-                self.poids_eau.set_value(pe)
-                self.poids_levain.set_value(pl)
-                self.poids_sel.set_value(ps)
-
-                self.result = True
-                pub.sendMessage("change_statusbar", msg="")
-            else:
-                self.poids_farine.set_value("")
-                self.poids_eau.set_value("")
-                self.poids_levain.set_value("")
-                self.poids_sel.set_value("")
-
-                self.result = False
-                pub.sendMessage("change_statusbar", msg="Données d'entrée incorrectes")
-
-
 class TabEquivalence(TabCommon):
 
     def __init__(self, parent):
@@ -275,7 +275,7 @@ class TabEquivalence(TabCommon):
         self.poids_farine = OutputField(self, "Poids de la farine")
         self.poids_eau = OutputField(self, "Poids de l'eau")
         self.poids_levain = OutputField(self, "Poids de levain")
-        self.poids_sel = OutputField(self, "Poids du self")
+        self.poids_sel = OutputField(self, "Poids du sel")
         self.outputs = [
             self.poids_farine, self.poids_eau, self.poids_levain, self.poids_sel
         ]
@@ -316,10 +316,10 @@ class Frame(wx.Frame):
         panel = wx.Panel(self)
 
         self.notebook = wx.Notebook(panel)
-        tab1 = TabPoidsLevainImpose(self.notebook)
-        self.notebook.AddPage(tab1, "Poids du levain imposé")
-        tab2 = TabPoidsPateImpose(self.notebook)
-        self.notebook.AddPage(tab2, "Poids de la pâte imposé")
+        tab1 = TabPoidsPateImpose(self.notebook)
+        self.notebook.AddPage(tab1, "Poids de la pâte imposé")
+        tab2 = TabPoidsLevainImpose(self.notebook)
+        self.notebook.AddPage(tab2, "Poids du levain imposé")
         tab3 = TabEquivalence(self.notebook)
         self.notebook.AddPage(tab3, "Équivalence")
         self.tabs = [tab1, tab2, tab3]
