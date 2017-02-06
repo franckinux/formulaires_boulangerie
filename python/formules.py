@@ -21,8 +21,10 @@ import argparse
 
 # début des formules
 
+TAUX_SEL = 0.02
 
-def calcul_eau_farine(thp, thl, tlf, pfl):
+
+def calcul_eau_farine_sel(thp, thl, tlf, pfl):
     """Calcule le poids de l'eau et le poids de la farine en fonction :
         - du taux d'hydratation de la pâte
         - du taux d'hydratation du levain
@@ -31,7 +33,8 @@ def calcul_eau_farine(thp, thl, tlf, pfl):
     """
     pf = pfl / tlf
     pe = ((1 / tlf + 1) * thp - thl) * pfl
-    return pf, pe
+    ps = (pf + pfl) * TAUX_SEL
+    return pf, pe, ps
 
 
 def calcul_pate_imposee(ptp, thp, thl, tlf):
@@ -40,9 +43,8 @@ def calcul_pate_imposee(ptp, thp, thl, tlf):
     (442.3, 212.3, 265.4, 11.5)
     """
     pfl = (ptp * tlf) / (1 + tlf) / (1 + thp)
-    pf, pe = calcul_eau_farine(thp, thl, tlf, pfl)
+    pf, pe, ps = calcul_eau_farine_sel(thp, thl, tlf, pfl)
     pl = (1 + thl) * pfl
-    ps = (pf + pfl) * 0.02
     return round(pf, 1), round(pe, 1), round(pl, 1), round(ps, 1)
 
 
@@ -52,9 +54,8 @@ def calcul_levain_impose(pl, thp, thl, tlf):
     (400.0, 200.0, 800.0, 10.0)
     """
     pfl = pl / (1 + thl)
-    pf, pe = calcul_eau_farine(thp, thl, tlf, pfl)
+    pf, pe, ps = calcul_eau_farine_sel(thp, thl, tlf, pfl)
     ptp = pl + pf + pe
-    ps = (pf + pfl) * 0.02
     return round(pf, 1), round(pe, 1), round(ptp, 1), round(ps, 1)
 
 
@@ -67,7 +68,7 @@ def calcul_equivalence(ptf, pte, thl, tlf):
     pe = pte - ptf * tlf / (1 + (1 + tlf) * thl)
     pl = pf * tlf
 
-    ps = ptf * 0.02
+    ps = ptf * TAUX_SEL
     return round(pf, 1), round(pe, 1), round(pl, 1), round(ps, 1)
 
 # fin des formules
