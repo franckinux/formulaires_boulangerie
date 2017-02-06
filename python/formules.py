@@ -21,6 +21,7 @@ import argparse
 
 # début des formules
 
+
 def calcul_eau_farine(thp, thl, tlf, pfl):
     """Calcule le poids de l'eau et le poids de la farine en fonction :
         - du taux d'hydratation de la pâte
@@ -33,9 +34,9 @@ def calcul_eau_farine(thp, thl, tlf, pfl):
     return pf, pe
 
 
-def calcul_eau_farine_levain(ptp, thp, thl, tlf):
+def calcul_pate_imposee(ptp, thp, thl, tlf):
     """Calcule les poids de la farine, de l'eau et du levain
-    >>> calcul_eau_farine_levain(920, 0.6, 1.0, 0.3)
+    >>> calcul_pate_imposee(920, 0.6, 1.0, 0.3)
     (442.3, 212.3, 265.4, 11.5)
     """
     pfl = (ptp * tlf) / (1 + tlf) / (1 + thp)
@@ -45,9 +46,9 @@ def calcul_eau_farine_levain(ptp, thp, thl, tlf):
     return round(pf, 1), round(pe, 1), round(pl, 1), round(ps, 1)
 
 
-def calcul_eau_farine_pate(pl, thp, thl, tlf):
+def calcul_levain_impose(pl, thp, thl, tlf):
     """Calcule les poids de la farine, de l'eau et de la pâte
-    >>> calcul_eau_farine_pate(200, 0.6, 1.0, 0.25)
+    >>> calcul_levain_impose(200, 0.6, 1.0, 0.25)
     (400.0, 200.0, 800.0, 10.0)
     """
     pfl = pl / (1 + thl)
@@ -57,9 +58,9 @@ def calcul_eau_farine_pate(pl, thp, thl, tlf):
     return round(pf, 1), round(pe, 1), round(ptp, 1), round(ps, 1)
 
 
-def calcul_eau_farine_levain2(ptf, pte, thl, tlf):
+def calcul_equivalence(ptf, pte, thl, tlf):
     """Calcule les poids de la farine, de l'eau et du levain
-    >>> calcul_eau_farine_levain2(500, 300, 0.7, 0.4)
+    >>> calcul_equivalence(500, 300, 0.7, 0.4)
     (429.3, 199.0, 171.7, 10.0)
     """
     pf = ptf / (1 + tlf / (1 + 1 / thl))
@@ -92,12 +93,12 @@ def saisie_taux(pate=True):
     return thp, thl, tlf
 
 
-def pate():
+def pate_imposee():
     ptp = input("Poids de la pâte à obtenir : ")
     ptp = float(ptp)
 
     thp, thl, tlf = saisie_taux()
-    pf, pe, pl, ps = calcul_eau_farine_levain(ptp, thp, thl, tlf)
+    pf, pe, pl, ps = calcul_pate_imposee(ptp, thp, thl, tlf)
 
     if pe < 0:
         print("\nIncompatibililté des taux d'hydratation")
@@ -108,12 +109,12 @@ def pate():
         print("Poids du sel (2%% du poids total de farine) : %.1f" % ps)
 
 
-def levain():
+def levain_impose():
     pl = input("Poids du levain : ")
     pl = float(pl)
 
     thp, thl, tlf = saisie_taux()
-    pf, pe, ptp, ps = calcul_eau_farine_pate(pl, thp, thl, tlf)
+    pf, pe, ptp, ps = calcul_levain_impose(pl, thp, thl, tlf)
 
     if pe < 0:
         print("\nIncompatibililté des taux d'hydratation")
@@ -131,7 +132,7 @@ def equivalence():
     pte = float(pte)
 
     thp, thl, tlf = saisie_taux(pate=False)
-    pf, pe, pl, ps = calcul_eau_farine_levain2(ptf, pte, thl, tlf)
+    pf, pe, pl, ps = calcul_equivalence(ptf, pte, thl, tlf)
 
     if pe < 0:
         print("\nIncompatibililté des taux d'hydratation")
@@ -145,9 +146,9 @@ def equivalence():
 def main():
     choix = input("Poids total / poids du levain / equivalence (t/l/e) : ")
     if choix == 't':
-        pate()
+        pate_imposee()
     elif choix == 'l':
-        levain()
+        levain_impose()
     elif choix == 'e':
         equivalence()
 
@@ -164,9 +165,9 @@ if __name__ == "__main__":
         import doctest
         doctest.testmod()
     elif args.levain:
-        levain()
+        levain_impose()
     elif args.pate:
-        pate()
+        pate_imposee()
     elif args.equivalence:
         equivalence()
     else:

@@ -184,7 +184,7 @@ class TabPoidsLevainImpose(TabCommon):
         tlf = self.taux_levain_farine.get_value()
 
         if pl != -1 and thp != -1 and thl != -1 and tlf != -1:
-            pf, pe, ptp, ps = formules.calcul_eau_farine_pate(
+            pf, pe, ptp, ps = formules.calcul_levain_impose(
                 pl, thp / 100.0, thl / 100.0, tlf / 100.0
             )
             if pf > 0 and pe > 0:
@@ -235,7 +235,7 @@ class TabPoidsPateImpose(TabCommon):
         tlf = self.taux_levain_farine.get_value()
 
         if ptp != -1 and thp != -1 and thl != -1 and tlf != -1:
-            pf, pe, pl, ps = formules.calcul_eau_farine_levain(
+            pf, pe, pl, ps = formules.calcul_pate_imposee(
                 ptp, thp / 100.0, thl / 100.0, tlf / 100.0
             )
             if pf > 0 and pe > 0:
@@ -287,7 +287,7 @@ class TabEquivalence(TabCommon):
         tlf = self.taux_levain_farine.get_value()
 
         if ptf != -1 and pte != -1 and thl != -1 and tlf != -1:
-            pf, pe, pl, ps = formules.calcul_eau_farine_levain2(
+            pf, pe, pl, ps = formules.calcul_equivalence(
                 ptf, pte, thl / 100.0, tlf / 100.0
             )
             if pf > 0 and pe > 0:
