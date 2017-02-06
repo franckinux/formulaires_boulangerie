@@ -18,10 +18,13 @@ départ :
 """
 
 import argparse
+import configparser
+import os
+import sys
 
 # début des formules
 
-TAUX_SEL = 0.02
+taux_sel = 0.02
 
 
 def calcul_eau_farine_sel(thp, thl, tlf, pfl):
@@ -31,9 +34,10 @@ def calcul_eau_farine_sel(thp, thl, tlf, pfl):
         - du taux de levain par rapport à la farine
         - du poids de la farine contenue dans le levain
     """
+    global taux_sel
     pf = pfl / tlf
     pe = ((1 / tlf + 1) * thp - thl) * pfl
-    ps = (pf + pfl) * TAUX_SEL
+    ps = (pf + pfl) * taux_sel
     return pf, pe, ps
 
 
@@ -64,11 +68,12 @@ def calcul_equivalence(ptf, pte, thl, tlf):
     >>> calcul_equivalence(500, 300, 0.7, 0.4)
     (429.3, 199.0, 171.7, 10.0)
     """
+    global taux_sel
     pf = ptf / (1 + tlf / (1 + 1 / thl))
     pe = pte - ptf * tlf / (1 + (1 + tlf) * thl)
     pl = pf * tlf
 
-    ps = ptf * TAUX_SEL
+    ps = ptf * taux_sel
     return round(pf, 1), round(pe, 1), round(pl, 1), round(ps, 1)
 
 # fin des formules
@@ -153,6 +158,24 @@ def main():
     elif choix == 'e':
         equivalence()
 
+
+def lire_taux_sel():
+    global taux_sel
+    config = configparser.ConfigParser()
+    path = os.path.dirname(os.path.abspath(__file__))
+    module = os.path.splitext(__file__)[0]
+    try:
+        config.read(os.path.join(path, "config.ini"))
+        if "formules" in config:
+            taux_sel = float(config[module].get("taux_sel", 0.02))
+        else:
+            sys.stderr.write("Erreur dans le fichier de configuration\n")
+            sys.exit(1)
+    except:
+        sys.stderr.write("Fichier de configuration non trouvé\n")
+        sys.exit(1)
+
+lire_taux_sel()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="calculs sur le pain au levain")
