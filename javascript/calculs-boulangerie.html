@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<!--
+license : GPL 3.0
+copyright : Franck Barbenoire (franck@barbenoi.re)
+-->
+<!--
+Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhAa?editors=1000
+-->
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <title>Calcul de boulangerie</title>
+    <script>
+      <!--
+        function calcul_pate_imposee() {
+          var ptp = document.form_pate_imposee.ptp.value;
+          ptp = ptp * 1.0;
+          var thp = document.form_pate_imposee.thp.value;
+          thp = thp / 100;
+          var thl = document.form_pate_imposee.thl.value;
+          thl = thl / 100;
+          var tlf = document.form_pate_imposee.tlf.value;
+          tlf = tlf / 100;
+          var pfl = (ptp * tlf) / (1 + tlf) / (1 + thp);
+          var pf = pfl / tlf;
+          var pe = (((1 / tlf) + 1) * thp - thl) * pfl;
+          var pl = (1 + thl) * pfl;
+          var ps = (pf + pfl) * 0.02;
+          if (pe < 0) {
+            document.form_pate_imposee.pf.value =  "-";
+            document.form_pate_imposee.pe.value =  "-";
+            document.form_pate_imposee.pl.value = "-";
+            document.form_pate_imposee.ps.value = "-";
+          } else {
+            document.form_pate_imposee.pf.value = Math.round(pf*10)/10;
+            document.form_pate_imposee.pe.value = Math.round(pe*10)/10;
+            document.form_pate_imposee.pl.value = Math.round(pl*10)/10;
+            document.form_pate_imposee.ps.value = Math.round(ps*10)/10;
+          }
+        }
+
+        function calcul_levain_impose() {
+          var pl = document.form_levain_impose.pl.value;
+          pl = pl * 1.0;
+          var thp = document.form_levain_impose.thp.value;
+          thp = thp / 100;
+          var thl = document.form_levain_impose.thl.value;
+          thl = thl / 100;
+          var tlf = document.form_levain_impose.tlf.value;
+          tlf = tlf / 100;
+          var pfl =  pl / (1 + thl);
+          var pf = pfl / tlf;
+          var pe = (((1 / tlf) + 1) * thp - thl) * pfl;
+          var ptp = pf + pe + pl;
+          var ps = (pf + pfl) * 0.02;
+          if (pe < 0) {
+            document.form_levain_impose.pf.value = "-";
+            document.form_levain_impose.pe.value = "-";
+            document.form_levain_impose.ptp.value = "-";
+            document.form_levain_impose.ps.value = "-";
+          } else {
+            document.form_levain_impose.pf.value = Math.round(pf*10)/10;
+            document.form_levain_impose.pe.value = Math.round(pe*10)/10;
+            document.form_levain_impose.ptp.value = Math.round(ptp*10)/10;
+            document.form_levain_impose.ps.value = Math.round(ps*10)/10;
+          }
+        }
+
+        function calcul_pate_equivalente() {
+          var ptf = document.form_pate_equivalente.ptf.value;
+          ptf = ptf * 1.0;
+          var pte = document.form_pate_equivalente.pte.value;
+          pte = pte * 1.0;
+          var thl = document.form_pate_equivalente.thl.value;
+          thl = thl / 100;
+          var tlf = document.form_pate_equivalente.tlf.value;
+          tlf = tlf / 100;
+          var pf = ptf / (1 + tlf / (1 + 1 / thl));
+          var pe = pte - ptf * tlf / (1 + (1 + tlf) * thl);
+          var pl = pf * tlf;
+          var ps = ptf * 0.02;
+          if (pe < 0) {
+            document.form_pate_equivalente.pf.value = "-";
+            document.form_pate_equivalente.pe.value = "-";
+            document.form_pate_equivalente.pl.value = "-";
+            document.form_pate_equivalente.ps.value = "-";
+          } else {
+            document.form_pate_equivalente.pf.value = Math.round(pf*10)/10;
+            document.form_pate_equivalente.pe.value = Math.round(pe*10)/10;
+            document.form_pate_equivalente.pl.value = Math.round(pl*10)/10;
+            document.form_pate_equivalente.ps.value = Math.round(ps*10)/10;
+          }
+        }
+      -->
+    </script>
+    <style type="text/css">
+      * {
+        font-family: Arial, sans;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+      }
+
+      #container {
+        margin: 0 auto;
+        width: 50%;  /* Ancho del contenedor */
+      }
+
+      #container > input {
+        height: 2.5em;
+        visibility: hidden;
+      }
+
+      #container > label {
+        background: #f9f9f9;
+        border-radius: .25em .25em 0 0;
+        color: #888;
+        cursor: pointer;
+        display: block;
+        float: left;
+        font-size: 1em;
+        height: 2.5em;
+        line-height: 2.5em;
+        margin-right: .25em;
+        padding: 0 1.5em;
+        text-align: center;
+      }
+
+      #container > input:hover + label {
+        background: #ddd;
+        color: #666;
+      }
+
+      #container > input:checked + label {
+        background: #f1f1f1;
+        color: #444;
+        position: relative;
+        z-index: 6;
+      }
+
+      #content {
+        background: #f1f1f1;  /* Fondo del contenido */
+        border-radius: 0 .25em .25em .25em;
+        min-height: 20em;  /* Alto del contenido */
+        position: relative;
+        width: 100%;
+        z-index: 5;
+      }
+
+      #content div {
+        opacity: 0;
+        padding: 1.5em;
+        position: absolute;
+        z-index: -100;
+      }
+
+      #container input#tab-1:checked ~ #content #content-1,
+      #container input#tab-2:checked ~ #content #content-2,
+      #container input#tab-3:checked ~ #content #content-3 {
+        opacity: 1;
+        z-index: 100;
+      }
+
+      input.visible {
+        visibility: visible !important;
+      }
+    </style>
+  </head>
+  <body onload="calcul_pate_imposee();">
+    <div id="container">
+
+      <!-- 1er tab -->
+      <input id="tab-1" type="radio" class="tab" name="tab-group" checked="checked" onchange="calcul_pate_imposee();" />
+      <label for="tab-1">Poids de la pâte imposé</label>
+      <!-- 2eme tab -->
+      <input id="tab-2" type="radio" class="tab" name="tab-group" onchange="calcul_levain_impose();" />
+      <label for="tab-2">Poids du levain imposé</label>
+      <!-- 3eme tab -->
+      <input id="tab-3" type="radio" class="tab" name="tab-group" onchange="calcul_pate_equivalente();" />
+      <label for="tab-3">Pâte équivalente</label>
+
+      <div id="content">
+        <!-- 1er tab -->
+        <div id="content-1">
+          <p>Ce formulaire permet de calculer le poids de l'eau et de la farine
+          pour obtenir une quantité de pâte dont le poids connu à l'avance.</p>
+          <p>Plus d'informations sur les formules appliquées sur
+          <a href="http://www.franck-barbenoire.fr/posts/2014/07/03/calcul-ingredients/">cette page</a>.</p>
+          <form name="form_pate_imposee">
+            <table cellspacing="30">
+              <tr>
+                <td><b>Entrées</b></td>
+                <td><b>Résultats</b></td>
+              </tr>
+              <tr>
+                <td>
+                  <table>
+                    <tr>
+                      <td>Poids de la pâte à obtenir</td>
+                      <td><input type="text" name="ptp" oninput="calcul_pate_imposee();" size= "4" maxlength="4" value="1000" alt="Poids de la pâte"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" name="thp" oninput="calcule_pate_imposee();" size="3" maxlength="3" value="60" alt="Taux d'hydratation de la pâte"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" name="thl" oninput="calcul_pate_imposee();" size="3" maxlength="3" value="100" alt="Taux d'hydratation du levain"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" name="tlf" oninput="calcul_pate_imposee();" size="3" maxlength="3" value="20" alt="Taux de la farine du levain par rapport à la farine"></td>
+                    </tr>
+                  </table>
+                </td>
+                <td>
+                  <table>
+                    <tr>
+                      <td>Poids de la farine : </td>
+		      <td><input type="text" size="5" name="pf" disabled /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids de l'eau : </td>
+                      <td><input type="text" size="5" name="pe" disabled /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids du levain : </td>
+                      <td><input type="text" size="5" name="pl" disabled /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span> : </td>
+                      <td><input type="text" size="4" name="ps" disabled /></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </form>
+        </div>
+
+        <!-- 2eme tab -->
+        <div id="content-2">
+          <p>Ce formulaire permet de calculer le poids de l'eau et de la farine
+          sachant que l'on dispose d'une quantité de levain dont le poids est connu à
+          l'avance.</p>
+          <p>Plus d'informations sur les formules appliquées sur
+          <a href="http://www.franck-barbenoire.fr/posts/2014/07/03/calcul-ingredients/">cette page</a>.</p>
+          <form name="form_levain_impose">
+            <table cellspacing="30">
+              <tr>
+                <td><b>Entrées</b></td>
+                <td><b>Résultats</b></td>
+              </tr>
+              <tr>
+                <td>
+                  <table>
+                    <tr>
+                      <td>Poids du levain disponible</td>
+                      <td><input type="text" name="pl" oninput="calcul_levain_impose();" size= "4" maxlength="4" value="150" alt="Poids du levain"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" name="thp" oninput="calcul_levain_impose();" size="3" maxlength="3" value="60" alt="Taux d'hydratation de la pâte"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" name="thl" oninput="calcul_levain_impose();" size="3" maxlength="3" value="100" alt="Taux d'hydratation du levain"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" name="tlf" oninput="calcul_levain_impose();" size="3" maxlength="3" value="30" alt="Taux de la farine du levain par rapport à la farine"></td>
+                    </tr>
+                  </table>
+                </td>
+                <td>
+                  <table>
+                    <tr>
+                      <td>Poids de la farine : </td>
+                      <td><input type="text" size="5" name="pf" disabled /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids de l'eau : </td>
+                      <td><input type="text" size="5" name="pe" disabled /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids de la pâte : </td>
+                      <td><input type="text" size="5" name="ptp" disabled /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span> : </td>
+                      <td><input type="text" size="4" name="ps" disabled /></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </form>
+        </div>
+
+        <!-- 3eme tab -->
+        <div id="content-3">
+          <p>Ce formulaire permet de convertir une recette de pain à la levure en une
+          recette de pain au levain.</p>
+          <p>Plus d'informations sur les formules appliquées sur
+          <a href="http://www.franck-barbenoire.fr/posts/2014/07/03/calcul-ingredients/">cette page</a>.</p>
+          <form name="form_pate_equivalente">
+            <table cellspacing="30">
+              <tr>
+                <td><b>Entrées</b></td>
+                <td><b>Résultats</b></td>
+              </tr>
+              <tr>
+                <td>
+                  <table>
+                    <tr>
+                      <td>Poids de la pâte farine</td>
+                      <td><input type="text" name="ptf" oninput="calcul_pate_equivalente();" size="4" maxlength="4" value="500" alt="Poids de la pâte"></td>
+                    </tr>
+                    <tr>
+                      <td>Poids de l'eau</td>
+                      <td><input type="text" name="pte" oninput="calcul_pate_equivalente();" size="4" maxlength="4" value="300" alt="Taux d'hydratation de la pâte"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" name="thl" oninput="calcul_pate_equivalente();" size="3" maxlength="3" value="70" alt="Taux d'hydratation du levain"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" name="tlf" oninput="calcul_pate_equivalente();" size="3" maxlength="3" value="40" alt="Taux de la farine du levain par rapport à la farine"></td>
+                    </tr>
+                  </table>
+                </td>
+                <td>
+                  <table>
+                    <tr>
+                      <td>Poids de la farine : </td>
+                      <td><input type="text" size="5" name="pf" disabled /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids de l'eau : </td>
+                      <td><input type="text" size="5" name="pe" disabled /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids du levain : </td>
+                      <td><input type="text" size="5" name="pl" disabled /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span> : </td>
+                      <td><input type="text" size="4" name="ps" disabled /></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>
