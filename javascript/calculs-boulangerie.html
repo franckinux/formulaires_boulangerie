@@ -3,9 +3,6 @@
 license : GPL 3.0
 copyright : Franck Barbenoire (franck@barbenoi.re)
 -->
-<!--
-Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhAa?editors=1000
--->
 <html lang="fr">
   <head>
     <meta charset="utf-8">
@@ -94,6 +91,7 @@ Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhA
       -->
     </script>
     <style type="text/css">
+      /* styles pour les tabs : https://codepen.io/CesarGabriel/pen/nLhAa?editors=1000 */
       * {
         font-family: Arial, sans;
         margin: 0;
@@ -140,15 +138,15 @@ Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhA
       }
 
       #content {
-        background: #f1f1f1;  /* Fondo del contenido */
+        background: #f1f1f1;
         border-radius: 0 .25em .25em .25em;
-        min-height: 20em;  /* Alto del contenido */
+        min-height: 20em;
         position: relative;
         width: 100%;
         z-index: 5;
       }
 
-      #content div {
+      #content > div {
         opacity: 0;
         padding: 1.5em;
         position: absolute;
@@ -165,8 +163,29 @@ Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhA
       input.visible {
         visibility: visible !important;
       }
+
+      /* autres styles : http://callmenick.com/post/various-css-input-text-styles */
+      .entree, .sortie {
+        padding: 5px;
+        margin: 5px;
+        border: solid 1px #dcdcdc;
+      }
+
+      .entree {
+        transition: box-shadow 0.3s, border 0.3s;
+      }
+
+      .entree:focus, .entree.focus {
+        border: solid 1px #707070;
+        box-shadow: 0 0 5px 1px #969696;
+      }
+
+      .sortie {
+        background-color: #d8d8d8;
+      }
     </style>
   </head>
+
   <body onload="calcul_pate_imposee();">
     <div id="container">
 
@@ -197,20 +216,20 @@ Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhA
                 <td>
                   <table>
                     <tr>
-                      <td>Poids de la pâte à obtenir</td>
-                      <td><input type="text" name="ptp" oninput="calcul_pate_imposee();" size= "4" maxlength="4" value="1000" alt="Poids de la pâte"></td>
+                      <td>Poids de la pâte</td>
+                      <td><input type="text" class="entree" name="ptp" oninput="calcul_pate_imposee();" size= "4" maxlength="4" value="1000" alt="Poids de la pâte"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" name="thp" oninput="calcule_pate_imposee();" size="3" maxlength="3" value="60" alt="Taux d'hydratation de la pâte"></td>
+                      <td><input type="text" class="entree" name="thp" oninput="calcule_pate_imposee();" size="3" maxlength="3" value="60" alt="Taux d'hydratation de la pâte"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" name="thl" oninput="calcul_pate_imposee();" size="3" maxlength="3" value="100" alt="Taux d'hydratation du levain"></td>
+                      <td><input type="text" class="entree" name="thl" oninput="calcul_pate_imposee();" size="3" maxlength="3" value="100" alt="Taux d'hydratation du levain"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" name="tlf" oninput="calcul_pate_imposee();" size="3" maxlength="3" value="20" alt="Taux de la farine du levain par rapport à la farine"></td>
+                      <td><input type="text" class="entree" name="tlf" oninput="calcul_pate_imposee();" size="3" maxlength="3" value="20" alt="Taux de la farine du levain par rapport à la farine"></td>
                     </tr>
                   </table>
                 </td>
@@ -218,19 +237,19 @@ Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhA
                   <table>
                     <tr>
                       <td>Poids de la farine : </td>
-		      <td><input type="text" size="5" name="pf" readonly /></td>
+		      <td><input type="text" class="sortie" name="pf" size="5" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids de l'eau : </td>
-                      <td><input type="text" size="5" name="pe" readonly /></td>
+                      <td><input type="text" class="sortie" name="pe" size="5" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids du levain : </td>
-                      <td><input type="text" size="5" name="pl" readonly /></td>
+                      <td><input type="text" class="sortie" name="pl" size="5" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span> : </td>
-                      <td><input type="text" size="4" name="ps" readonly /></td>
+                      <td><input type="text" class="sortie" name="ps" size="4" readonly /></td>
                     </tr>
                   </table>
                 </td>
@@ -241,9 +260,9 @@ Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhA
 
         <!-- 2eme tab -->
         <div id="content-2">
-          <p>Ce formulaire permet de calculer le poids de l'eau et de la farine
-          sachant que l'on dispose d'une quantité de levain dont le poids est connu à
-          l'avance.</p>
+	  <p>Ce formulaire permet de calculer le poids de l'eau et de la farine
+	  sachant que l'on dispose d'une quantité de levain dont le poids est
+	  connu à l'avance.</p>
           <p>Plus d'informations sur les formules appliquées sur
           <a href="http://www.franck-barbenoire.fr/posts/2014/07/03/calcul-ingredients/">cette page</a>.</p>
           <form name="form_levain_impose">
@@ -256,20 +275,20 @@ Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhA
                 <td>
                   <table>
                     <tr>
-                      <td>Poids du levain disponible</td>
-                      <td><input type="text" name="pl" oninput="calcul_levain_impose();" size= "4" maxlength="4" value="150" alt="Poids du levain"></td>
+                      <td>Poids du levain</td>
+                      <td><input type="text" class="entree" name="pl" oninput="calcul_levain_impose();" size= "4" maxlength="4" value="150" alt="Poids du levain"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" name="thp" oninput="calcul_levain_impose();" size="3" maxlength="3" value="60" alt="Taux d'hydratation de la pâte"></td>
+                      <td><input type="text" class="entree" name="thp" oninput="calcul_levain_impose();" size="3" maxlength="3" value="60" alt="Taux d'hydratation de la pâte"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" name="thl" oninput="calcul_levain_impose();" size="3" maxlength="3" value="100" alt="Taux d'hydratation du levain"></td>
+                      <td><input type="text" class="entree" name="thl" oninput="calcul_levain_impose();" size="3" maxlength="3" value="100" alt="Taux d'hydratation du levain"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" name="tlf" oninput="calcul_levain_impose();" size="3" maxlength="3" value="30" alt="Taux de la farine du levain par rapport à la farine"></td>
+                      <td><input type="text" class="entree" name="tlf" oninput="calcul_levain_impose();" size="3" maxlength="3" value="30" alt="Taux de la farine du levain par rapport à la farine"></td>
                     </tr>
                   </table>
                 </td>
@@ -277,19 +296,19 @@ Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhA
                   <table>
                     <tr>
                       <td>Poids de la farine : </td>
-                      <td><input type="text" size="5" name="pf" readonly /></td>
+                      <td><input type="text" class="sortie" name="pf" size="5" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids de l'eau : </td>
-                      <td><input type="text" size="5" name="pe" readonly /></td>
+                      <td><input type="text" class="sortie" name="pe" size="5" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids de la pâte : </td>
-                      <td><input type="text" size="5" name="ptp" readonly /></td>
+                      <td><input type="text" class="sortie" name="ptp" size="5" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span> : </td>
-                      <td><input type="text" size="4" name="ps" readonly /></td>
+                      <td><input type="text" class="sortie" name="ps" size="4" readonly /></td>
                     </tr>
                   </table>
                 </td>
@@ -300,8 +319,9 @@ Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhA
 
         <!-- 3eme tab -->
         <div id="content-3">
-          <p>Ce formulaire permet de convertir une recette de pain à la levure en une
-          recette de pain au levain.</p>
+	  <p>Ce formulaire permet de convertir une recette de pain à la levure
+	  en une recette de pain au levain.</p>
+	  <br>
           <p>Plus d'informations sur les formules appliquées sur
           <a href="http://www.franck-barbenoire.fr/posts/2014/07/03/calcul-ingredients/">cette page</a>.</p>
           <form name="form_pate_equivalente">
@@ -314,20 +334,20 @@ Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhA
                 <td>
                   <table>
                     <tr>
-                      <td>Poids de la pâte farine</td>
-                      <td><input type="text" name="ptf" oninput="calcul_pate_equivalente();" size="4" maxlength="4" value="500" alt="Poids de la pâte"></td>
+                      <td>Poids de la farine</td>
+                      <td><input type="text" class="entree" name="ptf" oninput="calcul_pate_equivalente();" size="4" maxlength="4" value="500" alt="Poids de la pâte"></td>
                     </tr>
                     <tr>
                       <td>Poids de l'eau</td>
-                      <td><input type="text" name="pte" oninput="calcul_pate_equivalente();" size="4" maxlength="4" value="300" alt="Taux d'hydratation de la pâte"></td>
+                      <td><input type="text" class="entree" name="pte" oninput="calcul_pate_equivalente();" size="4" maxlength="4" value="300" alt="Taux d'hydratation de la pâte"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" name="thl" oninput="calcul_pate_equivalente();" size="3" maxlength="3" value="70" alt="Taux d'hydratation du levain"></td>
+                      <td><input type="text" class="entree" name="thl" oninput="calcul_pate_equivalente();" size="3" maxlength="3" value="70" alt="Taux d'hydratation du levain"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" name="tlf" oninput="calcul_pate_equivalente();" size="3" maxlength="3" value="40" alt="Taux de la farine du levain par rapport à la farine"></td>
+                      <td><input type="text" class="entree" name="tlf" oninput="calcul_pate_equivalente();" size="3" maxlength="3" value="40" alt="Taux de la farine du levain par rapport à la farine"></td>
                     </tr>
                   </table>
                 </td>
@@ -335,19 +355,19 @@ Pour les tabulations en html5 et css3 : https://codepen.io/CesarGabriel/pen/nLhA
                   <table>
                     <tr>
                       <td>Poids de la farine : </td>
-                      <td><input type="text" size="5" name="pf" readonly /></td>
+                      <td><input type="text" class="sortie" name="pf" size="5" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids de l'eau : </td>
-                      <td><input type="text" size="5" name="pe" readonly /></td>
+                      <td><input type="text" class="sortie" name="pe" size="5" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids du levain : </td>
-                      <td><input type="text" size="5" name="pl" readonly /></td>
+                      <td><input type="text" class="sortie" name="pl" size="5" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span> : </td>
-                      <td><input type="text" size="4" name="ps" readonly /></td>
+                      <td><input type="text" class="sortie" name="ps" size="4" readonly /></td>
                     </tr>
                   </table>
                 </td>
