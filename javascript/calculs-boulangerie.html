@@ -12,15 +12,15 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         "use strict";
 
         function clear_results() {
-            var x = document.getElementsByClassName("sortie");
-            var i;
-            for (i = 0; i < x.length; i++) {
-              x[i].value = "-";
-            }
+          var x = document.getElementsByClassName("sortie");
+          var i;
+          for (i = 0; i < x.length; i++) {
+            x[i].value = "-";
+          }
         }
 
         function input_pate_imposee(event) {
-          if(!isNaN(event.target.value) && parseFloat(event.target.value) > 0) {
+          if(!isNaN(event.target.value) && parseFloat(event.target.value) >= 0) {
             calcul_pate_imposee();
           } else {
             alert("Erreur de saisie");
@@ -197,6 +197,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         padding: 5px;
         margin: 5px;
         border: solid 1px #dcdcdc;
+        width: 6em;
       }
 
       .entree {
@@ -245,19 +246,19 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Poids de la pâte</td>
-                      <td><input type="text" class="entree" name="ptp" oninput="input_pate_imposee(event);" size= "4" maxlength="4" value="1000" alt="Poids de la pâte"></td>
+                      <td><input type="text" class="entree" name="ptp" oninput="input_pate_imposee(event);" value="1000" alt="Poids de la pâte"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thp" oninput="input_pate_imposee(event);" size="3" maxlength="3" value="60" alt="Taux d'hydratation de la pâte"></td>
+                      <td><input type="text" class="entree" name="thp" oninput="input_pate_imposee(event);" value="60" alt="Taux d'hydratation de la pâte"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thl" oninput="input_pate_imposee(event);" size="3" maxlength="3" value="100" alt="Taux d'hydratation du levain"></td>
+                      <td><input type="text" class="entree" name="thl" oninput="input_pate_imposee(event);" value="100" alt="Taux d'hydratation du levain"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="tlf" oninput="input_pate_imposee(event);" size="3" maxlength="3" value="20" alt="Taux de la farine du levain par rapport à la farine"></td>
+                      <td><input type="text" class="entree" name="tlf" oninput="input_pate_imposee(event);" value="20" alt="Taux de la farine du levain par rapport à la farine"></td>
                     </tr>
                   </table>
                 </td>
@@ -265,19 +266,19 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Poids de la farine</td>
-                      <td><input type="text" class="sortie" name="pf" size="5" readonly /></td>
+                      <td><input type="text" class="sortie" name="pf" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids de l'eau</td>
-                      <td><input type="text" class="sortie" name="pe" size="5" readonly /></td>
+                      <td><input type="text" class="sortie" name="pe" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids du levain</td>
-                      <td><input type="text" class="sortie" name="pl" size="5" readonly /></td>
+                      <td><input type="text" class="sortie" name="pl" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
-                      <td><input type="text" class="sortie" name="ps" size="4" readonly /></td>
+                      <td><input type="text" class="sortie" name="ps" readonly /></td>
                     </tr>
                   </table>
                 </td>
@@ -304,19 +305,19 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Poids du levain</td>
-                      <td><input type="text" class="entree" name="pl" oninput="input_levain_impose(event);" size= "4" maxlength="4" value="150" alt="Poids du levain"></td>
+                      <td><input type="text" class="entree" name="pl" oninput="input_levain_impose(event);" value="150" alt="Poids du levain"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thp" oninput="input_levain_impose(event);" size="3" maxlength="3" value="60" alt="Taux d'hydratation de la pâte"></td>
+                      <td><input type="text" class="entree" name="thp" oninput="input_levain_impose(event);" value="60" alt="Taux d'hydratation de la pâte"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thl" oninput="input_levain_impose(event);" size="3" maxlength="3" value="100" alt="Taux d'hydratation du levain"></td>
+                      <td><input type="text" class="entree" name="thl" oninput="input_levain_impose(event);" value="100" alt="Taux d'hydratation du levain"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="tlf" oninput="input_levain_impose(event);" size="3" maxlength="3" value="30" alt="Taux de la farine du levain par rapport à la farine"></td>
+                      <td><input type="text" class="entree" name="tlf" oninput="input_levain_impose(event);" value="30" alt="Taux de la farine du levain par rapport à la farine"></td>
                     </tr>
                   </table>
                 </td>
@@ -324,19 +325,19 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Poids de la farine</td>
-                      <td><input type="text" class="sortie" name="pf" size="5" readonly /></td>
+                      <td><input type="text" class="sortie" name="pf" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids de l'eau</td>
-                      <td><input type="text" class="sortie" name="pe" size="5" readonly /></td>
+                      <td><input type="text" class="sortie" name="pe" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids de la pâte</td>
-                      <td><input type="text" class="sortie" name="ptp" size="5" readonly /></td>
+                      <td><input type="text" class="sortie" name="ptp" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
-                      <td><input type="text" class="sortie" name="ps" size="4" readonly /></td>
+                      <td><input type="text" class="sortie" name="ps" readonly /></td>
                     </tr>
                   </table>
                 </td>
@@ -363,19 +364,19 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Poids de la farine</td>
-                      <td><input type="text" class="entree" name="ptf" oninput="input_pate_equivalente(event);" size="4" maxlength="4" value="500" alt="Poids de la pâte"></td>
+                      <td><input type="text" class="entree" name="ptf" oninput="input_pate_equivalente(event);" value="500" alt="Poids de la pâte"></td>
                     </tr>
                     <tr>
                       <td>Poids de l'eau</td>
-                      <td><input type="text" class="entree" name="pte" oninput="input_pate_equivalente(event);" size="4" maxlength="4" value="300" alt="Taux d'hydratation de la pâte"></td>
+                      <td><input type="text" class="entree" name="pte" oninput="input_pate_equivalente(event);" value="300" alt="Taux d'hydratation de la pâte"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thl" oninput="input_pate_equivalente(event);" size="3" maxlength="3" value="70" alt="Taux d'hydratation du levain"></td>
+                      <td><input type="text" class="entree" name="thl" oninput="input_pate_equivalente(event);" value="70" alt="Taux d'hydratation du levain"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="tlf" oninput="input_pate_equivalente(event);" size="3" maxlength="3" value="40" alt="Taux de la farine du levain par rapport à la farine"></td>
+                      <td><input type="text" class="entree" name="tlf" oninput="input_pate_equivalente(event);" value="40" alt="Taux de la farine du levain par rapport à la farine"></td>
                     </tr>
                   </table>
                 </td>
@@ -383,19 +384,19 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Poids de la farine</td>
-                      <td><input type="text" class="sortie" name="pf" size="5" readonly /></td>
+                      <td><input type="text" class="sortie" name="pf" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids de l'eau</td>
-                      <td><input type="text" class="sortie" name="pe" size="5" readonly /></td>
+                      <td><input type="text" class="sortie" name="pe" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids du levain</td>
-                      <td><input type="text" class="sortie" name="pl" size="5" readonly /></td>
+                      <td><input type="text" class="sortie" name="pl" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
-                      <td><input type="text" class="sortie" name="ps" size="4" readonly /></td>
+                      <td><input type="text" class="sortie" name="ps" readonly /></td>
                     </tr>
                   </table>
                 </td>
