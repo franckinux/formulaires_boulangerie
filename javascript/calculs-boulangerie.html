@@ -19,11 +19,31 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           }
         }
 
-        function input_pate_imposee(event) {
-          if(!isNaN(event.target.value) && parseFloat(event.target.value) >= 0) {
-            calcul_pate_imposee();
+        function is_valid_number(n, percent) {
+          if(!isNaN(n)) {
+            var v = parseFloat(n)
+            if (v < 0) {
+              alert("Nombre négatif interdit");
+              clear_results();
+              return false;
+            }
+            if (percent && v > 100) {
+              alert("Pourcentage supérieur à 100");
+              clear_results();
+              return false;
+            }
+            return true;
           } else {
-            alert("Erreur de saisie");
+            alert("Format de nombre invalide");
+            clear_results();
+            return false;
+          }
+        }
+
+        function check_input(event, func, percent) {
+          if(is_valid_number(event.target.value, percent)) {
+            func();
+          } else {
             clear_results();
           }
         }
@@ -52,15 +72,6 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           }
         }
 
-        function input_levain_impose(event) {
-          if(!isNaN(event.target.value) && parseFloat(event.target.value) > 0) {
-            calcul_levain_impose();
-          } else {
-            alert("Erreur de saisie");
-            clear_results();
-          }
-        }
-
         function calcul_levain_impose() {
           var pl = document.form_levain_impose.pl.value;
           pl = pl * 1.0;
@@ -82,15 +93,6 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             document.form_levain_impose.pe.value = Math.round(pe*10)/10;
             document.form_levain_impose.ptp.value = Math.round(ptp*10)/10;
             document.form_levain_impose.ps.value = Math.round(ps*10)/10;
-          }
-        }
-
-        function input_pate_equivalente(event) {
-          if(!isNaN(event.target.value) && parseFloat(event.target.value) > 0) {
-            calcul_pate_equivalente();
-          } else {
-            alert("Erreur de saisie");
-            clear_results();
           }
         }
 
@@ -246,19 +248,19 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Poids de la pâte</td>
-                      <td><input type="text" class="entree" name="ptp" oninput="input_pate_imposee(event);" value="1000" alt="Poids de la pâte"></td>
+                      <td><input type="text" class="entree" name="ptp" oninput="check_input(event, calcul_pate_imposee, false);" value="1000"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thp" oninput="input_pate_imposee(event);" value="60" alt="Taux d'hydratation de la pâte"></td>
+                      <td><input type="text" class="entree" name="thp" oninput="check_input(event, calcul_pate_imposee, true);" value="60"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thl" oninput="input_pate_imposee(event);" value="100" alt="Taux d'hydratation du levain"></td>
+                      <td><input type="text" class="entree" name="thl" oninput="check_input(event, calcul_pate_imposee, true);" value="100"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="tlf" oninput="input_pate_imposee(event);" value="20" alt="Taux de la farine du levain par rapport à la farine"></td>
+                      <td><input type="text" class="entree" name="tlf" oninput="check_input(event, calcul_pate_imposee, true);" value="20"></td>
                     </tr>
                   </table>
                 </td>
@@ -305,19 +307,19 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Poids du levain</td>
-                      <td><input type="text" class="entree" name="pl" oninput="input_levain_impose(event);" value="150" alt="Poids du levain"></td>
+                      <td><input type="text" class="entree" name="pl" oninput="check_input(event, calcul_levain_impose, false);" value="150"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thp" oninput="input_levain_impose(event);" value="60" alt="Taux d'hydratation de la pâte"></td>
+                      <td><input type="text" class="entree" name="thp" oninput="check_input(event, calcul_levain_impose, true);" value="60"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thl" oninput="input_levain_impose(event);" value="100" alt="Taux d'hydratation du levain"></td>
+                      <td><input type="text" class="entree" name="thl" oninput="check_input(event, calcul_levain_impose, true);" value="100"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="tlf" oninput="input_levain_impose(event);" value="30" alt="Taux de la farine du levain par rapport à la farine"></td>
+                      <td><input type="text" class="entree" name="tlf" oninput="check_input(event, calcul_levain_impose, true);" value="30"></td>
                     </tr>
                   </table>
                 </td>
@@ -364,19 +366,19 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Poids de la farine</td>
-                      <td><input type="text" class="entree" name="ptf" oninput="input_pate_equivalente(event);" value="500" alt="Poids de la pâte"></td>
+                      <td><input type="text" class="entree" name="ptf" oninput="check_input(event, calcul_pate_equivalente, false);" value="500"></td>
                     </tr>
                     <tr>
                       <td>Poids de l'eau</td>
-                      <td><input type="text" class="entree" name="pte" oninput="input_pate_equivalente(event);" value="300" alt="Taux d'hydratation de la pâte"></td>
+                      <td><input type="text" class="entree" name="pte" oninput="check_input(event, calcul_pate_equivalente, false);" value="300"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thl" oninput="input_pate_equivalente(event);" value="70" alt="Taux d'hydratation du levain"></td>
+                      <td><input type="text" class="entree" name="thl" oninput="check_input(event, calcul_pate_equivalente, true);" value="70"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="tlf" oninput="input_pate_equivalente(event);" value="40" alt="Taux de la farine du levain par rapport à la farine"></td>
+                      <td><input type="text" class="entree" name="tlf" oninput="check_input(event, calcul_pate_equivalente, true);" value="40"></td>
                     </tr>
                   </table>
                 </td>
