@@ -23,13 +23,13 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           if(!isNaN(n)) {
             var v = parseFloat(n)
             if (v < 0) {
-              alert("Nombre négatif interdit");
               clear_results();
+              alert("Nombre négatif interdit");
               return false;
             }
             if (percent && v > 100) {
-              alert("Pourcentage supérieur à 100");
               clear_results();
+              alert("Pourcentage supérieur à 100");
               return false;
             }
             return true;
