@@ -163,7 +163,7 @@ def lire_taux_sel():
     global taux_sel
     config = configparser.ConfigParser()
     path = os.path.dirname(os.path.abspath(__file__))
-    module = os.path.splitext(__file__)[0]
+    module = os.path.basename((os.path.splitext(__file__))[0]
     try:
         config.read(os.path.join(path, "config.ini"))
         if "formules" in config:
