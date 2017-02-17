@@ -24,7 +24,7 @@ Je vous propose d'utiliser :
 - la version web qui se trouve dans le répertoire javascript, il vous suffit
   d'ouvrir ce fichier dans votre navigateur, il n'a pas d'autre dépendence et
   peut donc fonctionner sans connexion à Internet. Accessible également `sur le
-  web <http://formulaires.franck-barbenoire.fr/boulangerie.html>_` ;
+  web <http://formulaires.franck-barbenoire.fr/boulangerie.html>`_ ;
 
 - la version Python en mode graphique qui se trouve dans le répertoire python : ::
 
@@ -34,3 +34,5 @@ Je vous propose d'utiliser :
   répertoire pyhton : ::
 
     python formules.py
+
+Veuillez consulter le document python/requirements.rst.
