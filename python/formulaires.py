@@ -90,15 +90,11 @@ class TabCommon(wx.Panel):
         self.init_html()
 
     def init_ui(self, parent):
-        sizer_top = wx.BoxSizer(wx.HORIZONTAL)
-
         font = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.BOLD)
 
         self.set_fields()
 
         # entrées
-        sizer_entrees = wx.BoxSizer(wx.VERTICAL)
-
         label_entrees = wx.StaticText(self, -1, "Données")
         label_entrees.SetFont(font)
 
@@ -108,12 +104,11 @@ class TabCommon(wx.Panel):
             widgets.extend(inp.get_widgets())
         grid_sizer.AddMany(widgets)
 
+        sizer_entrees = wx.BoxSizer(wx.VERTICAL)
         sizer_entrees.Add(label_entrees, 0, wx.BOTTOM | wx.LEFT | wx.TOP, 10)
         sizer_entrees.Add(grid_sizer, 0, wx.LEFT, 10)
 
         # resultats
-        sizer_resultats = wx.BoxSizer(wx.VERTICAL)
-
         label_resultats = wx.StaticText(self, -1, "Résultats")
         label_resultats.SetFont(font)
 
@@ -123,15 +118,20 @@ class TabCommon(wx.Panel):
             widgets.extend(out.get_widgets())
         grid_sizer.AddMany(widgets)
 
+        sizer_resultats = wx.BoxSizer(wx.VERTICAL)
         sizer_resultats.Add(label_resultats, 0, wx.BOTTOM | wx.TOP, 10)
         sizer_resultats.Add(grid_sizer)
 
         # top sizer
+        sizer_top = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_top.AddStretchSpacer()
         sizer_top.Add(sizer_entrees)
         sizer_top.Add(
             wx.StaticLine(self, style=wx.LI_VERTICAL), 0, wx.EXPAND | wx.ALL, 5
         )
         sizer_top.Add(sizer_resultats)
+        sizer_top.AddStretchSpacer()
+
         self.SetSizerAndFit(sizer_top)
 
         self.update()
