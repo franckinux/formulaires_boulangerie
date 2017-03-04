@@ -79,7 +79,7 @@ def calcul_equivalence(ptf, pte, thl, tlf):
 # fin des formules
 
 
-def saisie_taux(pate=True):
+def saisie_taux(pate=True, levain=True):
     """
     Saisie des différents taux :
         - taux d'hydratation de la pâte
@@ -92,8 +92,11 @@ def saisie_taux(pate=True):
         thp = float(thp) / 100
     else:
         thp = None
-    thl = input("Taux d'hydratation du levain (%) : ")
-    thl = float(thl) / 100
+    if levain:
+        thl = input("Taux d'hydratation du levain (%) : ")
+        thl = float(thl) / 100
+    else:
+        thl = None
     tlf = input("Taux de farine du levain par rapport à la farine (%) : ")
     tlf = float(tlf) / 100
     return thp, thl, tlf
@@ -149,14 +152,44 @@ def equivalence():
         print("Poids du sel (2%% du poids total de farine) : %.1f" % ps)
 
 
+def iteratif():
+    ptp = input("Poids de la pâte à obtenir : ")
+    ptp = float(ptp)
+
+    thp, thl, tlf = saisie_taux()
+
+    for i in range(0, 5, 1):
+        pf, pe, pl, ps = calcul_pate_imposee(ptp, thp, thl, tlf)
+
+        if pe < 0:
+            print("\nIncompatibililté des taux d'hydratation")
+            break
+        else:
+            print("\nPoids de farine : %.1f" % pf)
+            print("Poids d'eau : %.1f" % pe)
+            print("Poids du levain : %.1f" % pl)
+            if i == 0:
+                print("Poids du sel (2%% du poids total de farine) : %.1f" % ps)
+            print("=====================================================")
+
+        ptp = pl
+        thp = thl
+        try:
+            _, thl, tlf = saisie_taux(pate=False)
+        except EOFError:
+            break
+
+
 def main():
-    choix = input("Poids total / poids du levain / equivalence (t/l/e) : ")
-    if choix == 't':
+    choix = input("poids de la pâte / poids du levain / equivalence / itératif (p/l/e/i) : ")
+    if choix == 'p':
         pate_imposee()
     elif choix == 'l':
         levain_impose()
     elif choix == 'e':
         equivalence()
+    elif choix == 'i':
+        iteratif()
 
 
 def lire_taux_sel():
@@ -175,6 +208,7 @@ def lire_taux_sel():
         sys.stderr.write("Fichier de configuration non trouvé\n")
         sys.exit(1)
 
+
 lire_taux_sel()
 
 if __name__ == "__main__":
@@ -183,6 +217,7 @@ if __name__ == "__main__":
     parser.add_argument('-p', "--pate", action="store_true", help="poids de la pâte imposé")
     parser.add_argument('-l', "--levain", action="store_true", help="poids du levain imposé")
     parser.add_argument('-e', "--equivalence", action="store_true", help="équivalence")
+    parser.add_argument('-i', "--iteratif", action="store_true", help="iteratif")
     args = parser.parse_args()
 
     if args.test:
