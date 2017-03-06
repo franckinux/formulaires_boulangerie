@@ -115,7 +115,7 @@ def pate_imposee():
         print("\nPoids de farine : %.1f" % pf)
         print("Poids d'eau : %.1f" % pe)
         print("Poids du levain : %.1f" % pl)
-        print("Poids du sel (2%% du poids total de farine) : %.1f" % ps)
+        print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel*100, ps))
 
 
 def levain_impose():
@@ -131,7 +131,7 @@ def levain_impose():
         print("\nPoids de farine : %.1f" % pf)
         print("Poids d'eau : %.1f" % pe)
         print("Poids de la pâte : %.1f" % ptp)
-        print("Poids du sel (2%% du poids total de farine) : %.1f" % ps)
+        print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel*100, ps))
 
 
 def equivalence():
@@ -149,7 +149,7 @@ def equivalence():
         print("\nPoids de farine : %.1f" % pf)
         print("Poids d'eau : %.1f" % pe)
         print("Poids du levain : %.1f" % pl)
-        print("Poids du sel (2%% du poids total de farine) : %.1f" % ps)
+        print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel*100, ps))
 
 
 def iteratif():
@@ -169,7 +169,7 @@ def iteratif():
             print("Poids d'eau : %.1f" % pe)
             print("Poids du levain : %.1f" % pl)
             if i == 0:
-                print("Poids du sel (2%% du poids total de farine) : %.1f" % ps)
+                print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel*100, ps))
             print("=====================================================")
 
         ptp = pl
@@ -229,5 +229,7 @@ if __name__ == "__main__":
         pate_imposee()
     elif args.equivalence:
         equivalence()
+    elif args.iteratif:
+        iteratif()
     else:
         main()
