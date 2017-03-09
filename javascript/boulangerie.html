@@ -17,7 +17,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           for (i = 0; i < x.length; i++) {
             x[i].value = "-";
           }
-        }
+        };
 
         function is_valid_number(n, percent) {
           if(!isNaN(n)) {
@@ -38,7 +38,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             clear_results();
             return false;
           }
-        }
+        };
 
         function check_input(event, func, percent) {
           if(is_valid_number(event.target.value, percent)) {
@@ -46,31 +46,25 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           } else {
             clear_results();
           }
-        }
+        };
 
-        function calcul_pate_imposee() {
-          var ptp = document.form_pate_imposee.ptp.value;
-          ptp = ptp * 1.0;
-          var thp = document.form_pate_imposee.thp.value;
-          thp = thp / 100;
-          var thl = document.form_pate_imposee.thl.value;
-          thl = thl / 100;
-          var tlf = document.form_pate_imposee.tlf.value;
-          tlf = tlf / 100;
+        function calcul_pate_imposee(ptp, thp, thl, tlf) {
           var pfl = (ptp * tlf) / (1 + tlf) / (1 + thp);
           var pf = pfl / tlf;
           var pe = (((1 / tlf) + 1) * thp - thl) * pfl;
           var pl = (1 + thl) * pfl;
           var ps = (pf + pfl) * 0.02;
           if (pe < 0) {
-            clear_results();
+            return null;
           } else {
-            document.form_pate_imposee.pf.value = Math.round(pf*10)/10;
-            document.form_pate_imposee.pe.value = Math.round(pe*10)/10;
-            document.form_pate_imposee.pl.value = Math.round(pl*10)/10;
-            document.form_pate_imposee.ps.value = Math.round(ps*10)/10;
+            return {
+              pf: Math.round(pf*10)/10,
+              pe: Math.round(pe*10)/10,
+              pl: Math.round(pl*10)/10,
+              ps: Math.round(ps*10)/10
+            };
           }
-        }
+        };
 
         function calcul_levain_impose() {
           var pl = document.form_levain_impose.pl.value;
@@ -94,7 +88,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             document.form_levain_impose.ptp.value = Math.round(ptp*10)/10;
             document.form_levain_impose.ps.value = Math.round(ps*10)/10;
           }
-        }
+        };
 
         function calcul_pate_equivalente() {
           var ptf = document.form_pate_equivalente.ptf.value;
@@ -117,7 +111,84 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             document.form_pate_equivalente.pl.value = Math.round(pl*10)/10;
             document.form_pate_equivalente.ps.value = Math.round(ps*10)/10;
           }
-        }
+        };
+
+       function set_visible(c) {
+         var i;
+         var t = document.getElementsByClassName(c);
+         for(i = 0; i < t.length; i++) {
+           t[i].style.display = "table-cell";
+         }
+       };
+
+       function set_invisible(c) {
+         var i;
+         var t = document.getElementsByClassName(c);
+         for(i = 0; i < t.length; i++) {
+           t[i].style.display = "none";
+         }
+       };
+
+       function initial_conditions() {
+         set_invisible("t5");
+         set_invisible("t4");
+         set_invisible("t3");
+         set_invisible("t2");
+         set_visible("t1");
+       };
+
+       var niveau = 1;
+
+       function toggle(c, s) {
+         var i;
+
+         if (s == '-' || s == '+') {
+           var t = document.getElementsByClassName(c);
+           for(i = 0; i < t.length; i++) {
+             var e = t[i];
+             if (e.style.display != "none") {
+               e.style.display = "none";
+             } else {
+               e.style.display = "table-cell";
+             }
+           }
+         }
+         if (s == '+') {
+          niveau++;
+         } else if (s =='-') {
+          niveau--;
+         }
+
+         var n_niveau;
+         var ptp = document.getElementById("ptp1").value;
+         ptp = ptp * 1.0;
+         var thp = document.getElementById("thp1").value;
+         thp = thp / 100;
+         for(i = 1; i <= niveau; i++) {
+           n_niveau = i.toString();
+           var thl = document.getElementById("thl" + n_niveau).value;
+           thl = thl / 100;
+           var tlf = document.getElementById("tlf" + n_niveau).value;
+           tlf = tlf / 100;
+           var res = calcul_pate_imposee(ptp, thp, thl, tlf);
+           if (res == null) {
+             console.log("plouf ! " + i)
+             break;
+           }
+           document.getElementById("pf" + n_niveau).value = res.pf;
+           document.getElementById("pe" + n_niveau).value = res.pe;
+           document.getElementById("pl" + n_niveau).value = res.pl;
+           if (i == 1) {
+             document.getElementById("ps1").value = res.ps;
+           }
+           ptp = res.pl;
+           thp = thl;
+         }
+       };
+
+       function calcul_chaine_pate() {
+          toggle(' ', ' ');
+       }
       -->
     </script>
     <style type="text/css">
@@ -168,9 +239,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
       }
 
       #content {
-        background: #f1f1f1;
         border-radius: 0 .25em .25em .25em;
-        min-height: 20em;
         position: relative;
         width: 100%;
         z-index: 5;
@@ -183,9 +252,13 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         z-index: -100;
       }
 
+      #content-1, #content-2, #content-3  {
+        background: #f1f1f1;
+      }
+
       #container input#tab-1:checked ~ #content #content-1,
       #container input#tab-2:checked ~ #content #content-2,
-      #container input#tab-3:checked ~ #content #content-3 {
+      #container input#tab-4:checked ~ #content #content-3 {
         opacity: 1;
         z-index: 100;
       }
@@ -214,10 +287,18 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
       .sortie {
         background-color: #d8d8d8;
       }
+
+      .signe {
+         font-size: 24pt;
+      }
+
+      .signe:hover {
+        cursor: pointer;
+      }
     </style>
   </head>
 
-  <body onload="calcul_pate_imposee();">
+  <body onload="initial_conditions(); calcul_chaine_pate();">
     <div id="container">
 
       <!-- 1er tab -->
@@ -240,27 +321,37 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           <form name="form_pate_imposee">
             <table cellspacing="30">
               <tr>
+                <td></td>
                 <td><b>Entrées</b></td>
                 <td><b>Résultats</b></td>
               </tr>
               <tr>
+                <td></td>
                 <td>
                   <table>
                     <tr>
                       <td>Poids de la pâte</td>
-                      <td><input type="text" class="entree" name="ptp" oninput="check_input(event, calcul_pate_imposee, false);" value="1000"></td>
+                      <td><input type="text" class="entree" id="ptp1" oninput="check_input(event, calcul_chaine_pate, false);" value="1000"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thp" oninput="check_input(event, calcul_pate_imposee, true);" value="60"></td>
+                      <td><input type="text" class="entree" id="thp1" oninput="check_input(event, calcul_chaine_pate, true);" value="60"></td>
                     </tr>
+                  </table>
+                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <table>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="thl" oninput="check_input(event, calcul_pate_imposee, true);" value="100"></td>
+                      <td><input type="text" class="entree" id="thl1" oninput="check_input(event, calcul_chaine_pate, true);" value="100"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" name="tlf" oninput="check_input(event, calcul_pate_imposee, true);" value="20"></td>
+                      <td><input type="text" class="entree" id="tlf1" oninput="check_input(event, calcul_chaine_pate, true);" value="20"></td>
                     </tr>
                   </table>
                 </td>
@@ -268,19 +359,155 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Poids de la farine</td>
-                      <td><input type="text" class="sortie" name="pf" readonly /></td>
+                      <td><input type="text" class="sortie" id="pf1" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids de l'eau</td>
-                      <td><input type="text" class="sortie" name="pe" readonly /></td>
+                      <td><input type="text" class="sortie" id="pe1" readonly /></td>
                     </tr>
                     <tr>
                       <td>Poids du levain</td>
-                      <td><input type="text" class="sortie" name="pl" readonly /></td>
+                      <td><input type="text" class="sortie" id="pl1" readonly /></td>
                     </tr>
                     <tr>
-                      <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
-                      <td><input type="text" class="sortie" name="ps" readonly /></td>
+                      <td>Poids du sel</td>
+                      <td><input type="text" class="sortie" id="ps1" readonly /> <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="signe t1 t2" onclick="toggle('t2', '+');">⊕</span>
+                  <span class="signe t2 t3" onclick="toggle('t2', '-');">⊖</span>
+                </td>
+                <td class="t2">
+                  <table>
+                    <tr>
+                      <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" class="entree" id="thl2" oninput="check_input(event, calcul_chaine_pate, true);" value="100"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" class="entree" id="tlf2" oninput="check_input(event, calcul_chaine_pate, true);" value="20"></td>
+                    </tr>
+                  </table>
+                </td>
+                <td class="t2">
+                  <table>
+                    <tr>
+                      <td>Poids de la farine</td>
+                      <td><input type="text" class="sortie" id="pf2" readonly /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids de l'eau</td>
+                      <td><input type="text" class="sortie" id="pe2" readonly /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids du levain</td>
+                      <td><input type="text" class="sortie" id="pl2" readonly /></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="signe t2 t3" onclick="toggle('t3', '+');">⊕</span>
+                  <span class="signe t3 t4" onclick="toggle('t3', '-');">⊖</span>
+                </td>
+                <td class="t3">
+                  <table>
+                    <tr>
+                      <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" class="entree" id="thl3" oninput="check_input(event, calcul_chaine_pate, true);" value="100"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" class="entree" id="tlf3" oninput="check_input(event, calcul_chaine_pate, true);" value="20"></td>
+                    </tr>
+                  </table>
+                </td>
+                <td class="t3">
+                  <table>
+                    <tr>
+                      <td>Poids de la farine</td>
+                      <td><input type="text" class="sortie" id="pf3" readonly /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids de l'eau</td>
+                      <td><input type="text" class="sortie" id="pe3" readonly /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids du levain</td>
+                      <td><input type="text" class="sortie" id="pl3" readonly /></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="signe t3 t4" onclick="toggle('t4', '+');">⊕</span>
+                  <span class="signe t4 t5" onclick="toggle('t4', '-');">⊖</span>
+                </td>
+                <td class="t4">
+                  <table>
+                    <tr>
+                      <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" class="entree" id="thl4" oninput="check_input(event, calcul_chaine_pate, true);" value="100"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" class="entree" id="tlf4" oninput="check_input(event, calcul_chaine_pate, true);" value="20"></td>
+                    </tr>
+                  </table>
+                </td>
+                <td class="t4">
+                  <table>
+                    <tr>
+                      <td>Poids de la farine</td>
+                      <td><input type="text" class="sortie" id="pf4" readonly /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids de l'eau</td>
+                      <td><input type="text" class="sortie" id="pe4" readonly /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids du levain</td>
+                      <td><input type="text" class="sortie" id="pl4" readonly /></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="signe t4 t5" onclick="toggle('t5', '+');">⊕</span>
+                  <span class="signe t5" onclick="toggle('t5', '-');">⊖</span>
+                </td>
+                <td class="t5">
+                  <table>
+                    <tr>
+                      <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" class="entree" id="thl5" oninput="check_input(event, calcul_chaine_pate, true);" value="100"></td>
+                    </tr>
+                    <tr>
+                      <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
+                      <td><input type="text" class="entree" id="tlf5" oninput="check_input(event, calcul_chaine_pate, true);" value="20"></td>
+                    </tr>
+                  </table>
+                </td>
+                <td class="t5">
+                  <table>
+                    <tr>
+                      <td>Poids de la farine</td>
+                      <td><input type="text" class="sortie" id="pf5" readonly /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids de l'eau</td>
+                      <td><input type="text" class="sortie" id="pe5" readonly /></td>
+                    </tr>
+                    <tr>
+                      <td>Poids du levain</td>
+                      <td><input type="text" class="sortie" id="pl5" readonly /></td>
                     </tr>
                   </table>
                 </td>
@@ -338,8 +565,8 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                       <td><input type="text" class="sortie" name="ptp" readonly /></td>
                     </tr>
                     <tr>
-                      <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
-                      <td><input type="text" class="sortie" name="ps" readonly /></td>
+                      <td>Poids du sel</td>
+                      <td><input type="text" class="sortie" name="ps" readonly /> <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
                     </tr>
                   </table>
                 </td>
@@ -397,8 +624,8 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                       <td><input type="text" class="sortie" name="pl" readonly /></td>
                     </tr>
                     <tr>
-                      <td>Poids du sel <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
-                      <td><input type="text" class="sortie" name="ps" readonly /></td>
+                      <td>Poids du sel</td>
+                      <td><input type="text" class="sortie" name="ps" readonly /> <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
                     </tr>
                   </table>
                 </td>
@@ -406,6 +633,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             </table>
           </form>
         </div>
+
       </div>
 
     </div>
