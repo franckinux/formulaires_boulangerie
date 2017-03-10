@@ -19,23 +19,34 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           }
         };
 
+        function clear_results2(n) {
+          var i;
+          var i_str;
+          for(i = n; i <= 5; i++) {
+            i_str = i.toString();
+            document.getElementById("pf" + i_str).value = '-';
+            document.getElementById("pe" + i_str).value = '-';
+            document.getElementById("pl" + i_str).value = '-';
+            if (n == 1) {
+              document.getElementById("ps1").value = '-';
+            }
+          }
+        };
+
         function is_valid_number(n, percent) {
           if(!isNaN(n)) {
             var v = parseFloat(n)
             if (v < 0) {
-              clear_results();
               alert("Nombre négatif interdit");
               return false;
             }
             if (percent && v > 100) {
-              clear_results();
               alert("Pourcentage supérieur à 100");
               return false;
             }
             return true;
           } else {
             alert("Format de nombre invalide");
-            clear_results();
             return false;
           }
         };
@@ -45,6 +56,14 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             func();
           } else {
             clear_results();
+          }
+        };
+
+        function check_input2(event, func, niveau, percent) {
+          if(is_valid_number(event.target.value, percent)) {
+            func();
+          } else {
+            clear_results2(niveau);
           }
         };
 
@@ -172,7 +191,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
            tlf = tlf / 100;
            var res = calcul_pate_imposee(ptp, thp, thl, tlf);
            if (res == null) {
-             console.log("plouf ! " + i)
+             clear_results2(i);
              break;
            }
            document.getElementById("pf" + n_niveau).value = res.pf;
@@ -331,11 +350,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Poids de la pâte</td>
-                      <td><input type="text" class="entree" id="ptp1" oninput="check_input(event, calcul_chaine_pate, false);" value="1000"></td>
+                      <td><input type="text" class="entree" id="ptp1" oninput="check_input2(event, calcul_chaine_pate, 1, false);" value="1000"></td>
                     </tr>
                     <tr>
                       <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" id="thp1" oninput="check_input(event, calcul_chaine_pate, true);" value="60"></td>
+                      <td><input type="text" class="entree" id="thp1" oninput="check_input2(event, calcul_chaine_pate, 1, true);" value="60"></td>
                     </tr>
                   </table>
                 </td>
@@ -347,11 +366,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" id="thl1" oninput="check_input(event, calcul_chaine_pate, true);" value="100"></td>
+                      <td><input type="text" class="entree" id="thl1" oninput="check_input2(event, calcul_chaine_pate, 1, true);" value="100"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" id="tlf1" oninput="check_input(event, calcul_chaine_pate, true);" value="20"></td>
+                      <td><input type="text" class="entree" id="tlf1" oninput="check_input2(event, calcul_chaine_pate, 1, true);" value="20"></td>
                     </tr>
                   </table>
                 </td>
@@ -385,11 +404,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" id="thl2" oninput="check_input(event, calcul_chaine_pate, true);" value="100"></td>
+                      <td><input type="text" class="entree" id="thl2" oninput="check_input2(event, calcul_chaine_pate, 2, true);" value="100"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" id="tlf2" oninput="check_input(event, calcul_chaine_pate, true);" value="20"></td>
+                      <td><input type="text" class="entree" id="tlf2" oninput="check_input2(event, calcul_chaine_pate, 2, true);" value="20"></td>
                     </tr>
                   </table>
                 </td>
@@ -419,11 +438,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" id="thl3" oninput="check_input(event, calcul_chaine_pate, true);" value="100"></td>
+                      <td><input type="text" class="entree" id="thl3" oninput="check_input2(event, calcul_chaine_pate, 3, true);" value="100"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" id="tlf3" oninput="check_input(event, calcul_chaine_pate, true);" value="20"></td>
+                      <td><input type="text" class="entree" id="tlf3" oninput="check_input2(event, calcul_chaine_pate, 3, true);" value="20"></td>
                     </tr>
                   </table>
                 </td>
@@ -453,11 +472,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" id="thl4" oninput="check_input(event, calcul_chaine_pate, true);" value="100"></td>
+                      <td><input type="text" class="entree" id="thl4" oninput="check_input2(event, calcul_chaine_pate, 4, true);" value="100"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" id="tlf4" oninput="check_input(event, calcul_chaine_pate, true);" value="20"></td>
+                      <td><input type="text" class="entree" id="tlf4" oninput="check_input2(event, calcul_chaine_pate, 4, true);" value="20"></td>
                     </tr>
                   </table>
                 </td>
@@ -487,11 +506,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                   <table>
                     <tr>
                       <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" id="thl5" oninput="check_input(event, calcul_chaine_pate, true);" value="100"></td>
+                      <td><input type="text" class="entree" id="thl5" oninput="check_input2(event, calcul_chaine_pate, 5, true);" value="100"></td>
                     </tr>
                     <tr>
                       <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                      <td><input type="text" class="entree" id="tlf5" oninput="check_input(event, calcul_chaine_pate, true);" value="20"></td>
+                      <td><input type="text" class="entree" id="tlf5" oninput="check_input2(event, calcul_chaine_pate, 5, true);" value="20"></td>
                     </tr>
                   </table>
                 </td>
