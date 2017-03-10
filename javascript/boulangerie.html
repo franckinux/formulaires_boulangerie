@@ -11,6 +11,32 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
       <!--
         "use strict";
 
+        var niveau = 1;
+
+        function set_visible(c) {
+          var i;
+          var t = document.getElementsByClassName(c);
+          for(i = 0; i < t.length; i++) {
+            t[i].style.display = "table-cell";
+          }
+        };
+
+        function set_invisible(c) {
+          var i;
+          var t = document.getElementsByClassName(c);
+          for(i = 0; i < t.length; i++) {
+            t[i].style.display = "none";
+          }
+        };
+
+        function initial_conditions() {
+          set_invisible("t5");
+          set_invisible("t4");
+          set_invisible("t3");
+          set_invisible("t2");
+          set_visible("t1");
+        };
+
         function clear_results() {
           var x = document.getElementsByClassName("sortie");
           var i;
@@ -84,6 +110,57 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             };
           }
         };
+
+        function chaine_pate_precis(c, s) {
+          var i;
+
+          if (s == '-' || s == '+') {
+            var t = document.getElementsByClassName(c);
+            for(i = 0; i < t.length; i++) {
+              var e = t[i];
+              if (e.style.display != "none") {
+                e.style.display = "none";
+              } else {
+                e.style.display = "table-cell";
+              }
+            }
+          }
+          if (s == '+') {
+           niveau++;
+          } else if (s =='-') {
+           niveau--;
+          }
+
+          var n_niveau;
+          var ptp = document.getElementById("ptp1").value;
+          ptp = ptp * 1.0;
+          var thp = document.getElementById("thp1").value;
+          thp = thp / 100;
+          for(i = 1; i <= niveau; i++) {
+            n_niveau = i.toString();
+            var thl = document.getElementById("thl" + n_niveau).value;
+            thl = thl / 100;
+            var tlf = document.getElementById("tlf" + n_niveau).value;
+            tlf = tlf / 100;
+            var res = calcul_pate_imposee(ptp, thp, thl, tlf);
+            if (res == null) {
+              clear_results2(i);
+              break;
+            }
+            document.getElementById("pf" + n_niveau).value = res.pf;
+            document.getElementById("pe" + n_niveau).value = res.pe;
+            document.getElementById("pl" + n_niveau).value = res.pl;
+            if (i == 1) {
+              document.getElementById("ps1").value = res.ps;
+            }
+            ptp = res.pl;
+            thp = thl;
+          }
+        };
+
+        function chaine_pate() {
+           chaine_pate_precis(' ', ' ');
+        }
 
         function calcul_levain_impose(pl, thp, thl, tlf) {
           var pfl =  pl / (1 + thl);
@@ -159,83 +236,6 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             document.form_pate_equivalente.ps.value = Math.round(res.ps*10)/10;
           }
         }
-
-       function set_visible(c) {
-         var i;
-         var t = document.getElementsByClassName(c);
-         for(i = 0; i < t.length; i++) {
-           t[i].style.display = "table-cell";
-         }
-       };
-
-       function set_invisible(c) {
-         var i;
-         var t = document.getElementsByClassName(c);
-         for(i = 0; i < t.length; i++) {
-           t[i].style.display = "none";
-         }
-       };
-
-       function initial_conditions() {
-         set_invisible("t5");
-         set_invisible("t4");
-         set_invisible("t3");
-         set_invisible("t2");
-         set_visible("t1");
-       };
-
-       var niveau = 1;
-
-       function chaine_pate_precis(c, s) {
-         var i;
-
-         if (s == '-' || s == '+') {
-           var t = document.getElementsByClassName(c);
-           for(i = 0; i < t.length; i++) {
-             var e = t[i];
-             if (e.style.display != "none") {
-               e.style.display = "none";
-             } else {
-               e.style.display = "table-cell";
-             }
-           }
-         }
-         if (s == '+') {
-          niveau++;
-         } else if (s =='-') {
-          niveau--;
-         }
-
-         var n_niveau;
-         var ptp = document.getElementById("ptp1").value;
-         ptp = ptp * 1.0;
-         var thp = document.getElementById("thp1").value;
-         thp = thp / 100;
-         for(i = 1; i <= niveau; i++) {
-           n_niveau = i.toString();
-           var thl = document.getElementById("thl" + n_niveau).value;
-           thl = thl / 100;
-           var tlf = document.getElementById("tlf" + n_niveau).value;
-           tlf = tlf / 100;
-           var res = calcul_pate_imposee(ptp, thp, thl, tlf);
-           if (res == null) {
-             clear_results2(i);
-             break;
-           }
-           document.getElementById("pf" + n_niveau).value = res.pf;
-           document.getElementById("pe" + n_niveau).value = res.pe;
-           document.getElementById("pl" + n_niveau).value = res.pl;
-           if (i == 1) {
-             document.getElementById("ps1").value = res.ps;
-           }
-           ptp = res.pl;
-           thp = thl;
-         }
-       };
-
-       function chaine_pate() {
-          chaine_pate_precis(' ', ' ');
-       }
       -->
     </script>
     <style type="text/css">
