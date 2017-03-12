@@ -93,12 +93,16 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           }
         };
 
-        function calcul_pate_imposee(ptp, thp, thl, tlf) {
+        function check_input3(event, percent) {
+          is_valid_number(event.target.value, percent);
+        };
+
+        function calcul_pate_imposee(ptp, thp, thl, tlf, ts) {
           var pfl = (ptp * tlf) / (1 + tlf) / (1 + thp);
           var pf = pfl / tlf;
           var pe = (((1 / tlf) + 1) * thp - thl) * pfl;
           var pl = (1 + thl) * pfl;
-          var ps = (pf + pfl) * 0.02;
+          var ps = (pf + pfl) * ts;
           if (pe < 0) {
             return null;
           } else {
@@ -136,13 +140,15 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           ptp = ptp * 1.0;
           var thp = document.getElementById("thp1").value;
           thp = thp / 100;
+          var ts = document.getElementById("ts").value;
+          ts = ts / 100;
           for(i = 1; i <= niveau; i++) {
             n_niveau = i.toString();
             var thl = document.getElementById("thl" + n_niveau).value;
             thl = thl / 100;
             var tlf = document.getElementById("tlf" + n_niveau).value;
             tlf = tlf / 100;
-            var res = calcul_pate_imposee(ptp, thp, thl, tlf);
+            var res = calcul_pate_imposee(ptp, thp, thl, tlf, ts);
             if (res == null) {
               clear_results2(i);
               break;
@@ -162,12 +168,12 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
            chaine_pate_precis(' ', ' ');
         }
 
-        function calcul_levain_impose(pl, thp, thl, tlf) {
+        function calcul_levain_impose(pl, thp, thl, tlf, ts) {
           var pfl =  pl / (1 + thl);
           var pf = pfl / tlf;
           var pe = (((1 / tlf) + 1) * thp - thl) * pfl;
           var ptp = pf + pe + pl;
-          var ps = (pf + pfl) * 0.02;
+          var ps = (pf + pfl) * ts;
           if (pe < 0) {
             return null;
           } else {
@@ -189,7 +195,9 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           thl = thl / 100;
           var tlf = document.form_levain_impose.tlf.value;
           tlf = tlf / 100;
-          var res = calcul_levain_impose(pl, thp, thl, tlf);
+          var ts = document.getElementById("ts").value;
+          ts = ts / 100;
+          var res = calcul_levain_impose(pl, thp, thl, tlf, ts);
           if (res == null) {
             clear_results();
           } else {
@@ -200,11 +208,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           }
         }
 
-        function calcul_pate_equivalente(ptf, pte, thl, tlf) {
+        function calcul_pate_equivalente(ptf, pte, thl, tlf, ts) {
           var pf = ptf / (1 + tlf / (1 + 1 / thl));
           var pe = pte - ptf * tlf / (1 + (1 + tlf) * thl);
           var pl = pf * tlf;
-          var ps = ptf * 0.02;
+          var ps = ptf * ts;
           if (pe < 0) {
             return null;
           } else {
@@ -226,7 +234,9 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           thl = thl / 100;
           var tlf = document.form_pate_equivalente.tlf.value;
           tlf = tlf / 100;
-          var res = calcul_pate_equivalente(ptf, pte, thl, tlf);
+          var ts = document.getElementById("ts").value;
+          ts = ts / 100;
+          var res = calcul_pate_equivalente(ptf, pte, thl, tlf, ts);
           if (res == null) {
             clear_results();
           } else {
@@ -299,14 +309,16 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         z-index: -100;
       }
 
-      #content-1, #content-2, #content-3, #content-4  {
+      #content-1, #content-2, #content-3, #content-4, #content-5  {
         background: #f1f1f1;
       }
 
       #container input#tab-1:checked ~ #content #content-1,
       #container input#tab-2:checked ~ #content #content-2,
       #container input#tab-3:checked ~ #content #content-3,
-      #container input#tab-4:checked ~ #content #content-4 {
+      #container input#tab-4:checked ~ #content #content-4,
+      #container input#tab-5:checked ~ #content #content-5 {
+        width: 100%;
         opacity: 1;
         z-index: 100;
       }
@@ -360,13 +372,16 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
       <label for="tab-3">Pâte équivalente</label>
       <!-- 4eme tab -->
       <input id="tab-4" type="radio" class="tab" name="tab-group" />
-      <label for="tab-4">Informations</label>
+      <label for="tab-4">Paramètres</label>
+      <!-- 5eme tab -->
+      <input id="tab-5" type="radio" class="tab" name="tab-group" />
+      <label for="tab-5">Informations</label>
 
       <div id="content">
         <!-- 1er tab -->
         <div id="content-1">
           <p>Ce formulaire permet de calculer le poids de l'eau et de la farine
-          pour obtenir une quantité de pâte dont le poids est connu à l'avance.</p>
+          pour obtenir une quantité de pâte donnée par son poids.</p>
           <form name="form_pate_imposee">
             <table cellspacing="30">
               <tr>
@@ -420,7 +435,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                     </tr>
                     <tr>
                       <td>Poids du sel</td>
-                      <td><input type="text" class="sortie" id="ps1" readonly /> <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
+                      <td><input type="text" class="sortie" id="ps1" readonly /></td>
                     </tr>
                   </table>
                 </td>
@@ -613,7 +628,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                     </tr>
                     <tr>
                       <td>Poids du sel</td>
-                      <td><input type="text" class="sortie" name="ps" readonly /> <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
+                      <td><input type="text" class="sortie" name="ps" readonly /></td>
                     </tr>
                   </table>
                 </td>
@@ -669,7 +684,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                     </tr>
                     <tr>
                       <td>Poids du sel</td>
-                      <td><input type="text" class="sortie" name="ps" readonly /> <span style="font-size: smaller;">(2% du poids de toute la farine)</span></td>
+                      <td><input type="text" class="sortie" name="ps" readonly /></td>
                     </tr>
                   </table>
                 </td>
@@ -680,6 +695,12 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
 
         <!-- 4eme tab -->
         <div id="content-4">
+          <p>Taux de sel par rapport à la farine <span style="font-size: smaller;">(en %)</span>
+          <input type="text" class="entree" id="ts" oninput="check_input3(event, true);" value="2"></p>
+        </div>
+
+        <!-- 5eme tab -->
+        <div id="content-5">
           <p>Les formules appliquées proviennent de
           <a href="http://www.franck-barbenoire.fr/posts/2014/07/03/taux-hydratation/">ma page personnelle consacrée au taux d'hydratation en boulangerie</a>.</p>
           <br>
@@ -687,7 +708,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           <br>
           <p>Licence : <a href="https://www.gnu.org/licenses/gpl-3.0.fr.html">GPL 3.0</a>.</p>
           <br>
-          <p>Page GitHub du projet : <a href="https://github.com/franckinux/formulaires_boulangerie">https://github.com/franckinux/formulaires_boulangerie.</a></p>
+          <p>Page GitHub du projet : <a href="https://github.com/franckinux/formulaires_boulangerie">https://github.com/franckinux/formulaires_boulangerie</a>.</p>
         </div>
 
       </div>
