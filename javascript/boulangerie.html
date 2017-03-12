@@ -299,13 +299,14 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         z-index: -100;
       }
 
-      #content-1, #content-2, #content-3  {
+      #content-1, #content-2, #content-3, #content-4  {
         background: #f1f1f1;
       }
 
       #container input#tab-1:checked ~ #content #content-1,
       #container input#tab-2:checked ~ #content #content-2,
-      #container input#tab-3:checked ~ #content #content-3 {
+      #container input#tab-3:checked ~ #content #content-3,
+      #container input#tab-4:checked ~ #content #content-4 {
         opacity: 1;
         z-index: 100;
       }
@@ -357,14 +358,15 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
       <!-- 3eme tab -->
       <input id="tab-3" type="radio" class="tab" name="tab-group" onchange="pate_equivalente();" />
       <label for="tab-3">Pâte équivalente</label>
+      <!-- 4eme tab -->
+      <input id="tab-4" type="radio" class="tab" name="tab-group" />
+      <label for="tab-4">Informations</label>
 
       <div id="content">
         <!-- 1er tab -->
         <div id="content-1">
           <p>Ce formulaire permet de calculer le poids de l'eau et de la farine
           pour obtenir une quantité de pâte dont le poids est connu à l'avance.</p>
-          <p>Plus d'informations sur les formules appliquées sur
-          <a href="http://www.franck-barbenoire.fr/posts/2014/07/03/taux-hydratation/">cette page</a>.</p>
           <form name="form_pate_imposee">
             <table cellspacing="30">
               <tr>
@@ -568,8 +570,6 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           <p>Ce formulaire permet de calculer le poids de l'eau et de la farine
           sachant que l'on dispose d'une quantité de levain dont le poids est
           connu à l'avance.</p>
-          <p>Plus d'informations sur les formules appliquées sur
-          <a href="http://www.franck-barbenoire.fr/posts/2014/07/03/calcul-ingredients/">cette page</a>.</p>
           <form name="form_levain_impose">
             <table cellspacing="30">
               <tr>
@@ -626,9 +626,6 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         <div id="content-3">
           <p>Ce formulaire permet de convertir une recette de pain à la levure
           en une recette de pain au levain.</p>
-          <br>
-          <p>Plus d'informations sur les formules appliquées sur
-          <a href="http://www.franck-barbenoire.fr/posts/2014/07/03/calcul-ingredients/">cette page</a>.</p>
           <form name="form_pate_equivalente">
             <table cellspacing="30">
               <tr>
@@ -679,6 +676,18 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               </tr>
             </table>
           </form>
+        </div>
+
+        <!-- 4eme tab -->
+        <div id="content-4">
+          <p>Les formules appliquées proviennent de
+          <a href="http://www.franck-barbenoire.fr/posts/2014/07/03/taux-hydratation/">ma page personnelle consacrée au taux d'hydratation en boulangerie</a>.</p>
+          <br>
+          <p>Dévéloppeur et copyright : <a href="mailto:franck@barbenoi.re">Franck Barbenoire</a>.</p>
+          <br>
+          <p>Licence : <a href="https://www.gnu.org/licenses/gpl-3.0.fr.html">GPL 3.0</a>.</p>
+          <br>
+          <p>Page GitHub du projet : <a href="https://github.com/franckinux/formulaires_boulangerie">https://github.com/franckinux/formulaires_boulangerie.</a></p>
         </div>
 
       </div>
