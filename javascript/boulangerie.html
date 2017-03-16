@@ -107,10 +107,10 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             return null;
           } else {
             return {
-              pf: Math.round(pf*10)/10,
-              pe: Math.round(pe*10)/10,
-              pl: Math.round(pl*10)/10,
-              ps: Math.round(ps*10)/10
+              pf: pf,
+              pe: pe,
+              pl: pl,
+              ps: ps
             };
           }
         };
@@ -153,9 +153,9 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               clear_results2(i);
               break;
             }
-            document.getElementById("pf" + n_niveau).value = res.pf;
-            document.getElementById("pe" + n_niveau).value = res.pe;
-            document.getElementById("pl" + n_niveau).value = res.pl;
+            document.getElementById("pf" + n_niveau).value = Math.round(res.pf*10)/10;
+            document.getElementById("pe" + n_niveau).value = Math.round(res.pe*10)/10;
+            document.getElementById("pl" + n_niveau).value = Math.round(res.pl*10)/10;
             if (i == 1) {
               document.getElementById("ps1").value = res.ps;
             }
@@ -178,10 +178,10 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             return null;
           } else {
             return {
-              pf: Math.round(pf*10)/10,
-              pe: Math.round(pe*10)/10,
-              ptp: Math.round(ptp*10)/10,
-              ps: Math.round(ps*10)/10
+              pf: pf,
+              pe: pe,
+              ptp:ptp,
+              ps: ps
             };
           }
         };
@@ -217,10 +217,10 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             return null;
           } else {
             return {
-              pf: Math.round(pf*10)/10,
-              pe: Math.round(pe*10)/10,
-              pl: Math.round(pl*10)/10,
-              ps: Math.round(ps*10)/10
+              pf: pf,
+              pe: pe,
+              pl: pl,
+              ps: ps
             };
           }
         };
