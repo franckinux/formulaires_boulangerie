@@ -249,6 +249,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
             document.querySelector("#content-3 .ps").value = Math.round(res.ps*10)/10;
           }
         }
+
+        function copie() {
+          var html = document.getElementById("titre").value;
+          document.getElementById("titre-page").innerHTML = html;
+        }
       -->
     </script>
 
@@ -352,6 +357,10 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         background-color: #d8d8d8;
       }
 
+      .entree-texte {
+        width: 50em;
+      }
+
       .signe {
          font-size: 24pt;
       }
@@ -371,11 +380,21 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
       .left-col {
         padding-right: 30px;
       }
+
+      .imprimer {
+        display: none;
+      }
     </style>
 
     <style type="text/css" media="print">
       * {
         font-size: 12pt;
+      }
+
+      h1 {
+        font-size: 16pt;
+        margin-bottom: 3ex;
+        text-align: center;
       }
 
       #content > div {
@@ -400,10 +419,16 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         box-shadow: none !important;
         outline: none !important;
       }
+
+      .imprimer {
+        display: block;
+      }
     </style>
   </head>
 
-  <body onload="initial_conditions(); chaine_pate();">
+  <body onload="initial_conditions(); chaine_pate(); copie()">
+    <h1 class="imprimer" id="titre-page"></h1>
+
     <div id="container">
 
       <!-- 1er tab -->
@@ -738,6 +763,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         <div id="content-4">
           <p>Taux de sel par rapport à la farine <span style="font-size: smaller;">(en %)</span>
           <input type="text" class="entree" id="ts" maxlength="6" oninput="check_input3(event, true);" value="2"></p>
+          <p>Titre de la page imprimée <input type="text" class="entree entree-texte" id="titre" size="100" onchange="copie();"></p>
         </div>
 
         <!-- 5eme tab -->
