@@ -127,6 +127,9 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               } else {
                 e.style.display = "table-cell";
               }
+              if (t[i].tagName == "TD") {
+                t[i].style.borderTop = "1px solid #ccc";
+            }
             }
           }
           if (s == '+') {
@@ -355,6 +358,17 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
       .signe:hover {
         cursor: pointer;
       }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      td {
+        padding: 3px;
+      }
+
+      .left-col {
+        padding-right: 30px;
     </style>
   </head>
 
@@ -382,7 +396,8 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         <div id="content-1">
           <p>Ce formulaire permet de calculer le poids de l'eau et de la farine
           pour obtenir une quantité de pâte donnée.</p>
-          <table cellspacing="30">
+          <br>
+          <table>
             <tr>
               <td></td>
               <td><b>Entrées</b></td>
@@ -440,7 +455,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               </td>
             </tr>
             <tr>
-              <td>
+              <td class="left-col">
                 <span class="signe t1 t2" onclick="chaine_pate_precis('t2', '+');">⊕</span>
                 <span class="signe t2 t3" onclick="chaine_pate_precis('t2', '-');">⊖</span>
               </td>
@@ -474,7 +489,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               </td>
             </tr>
             <tr>
-              <td>
+              <td class="left-col">
                 <span class="signe t2 t3" onclick="chaine_pate_precis('t3', '+');">⊕</span>
                 <span class="signe t3 t4" onclick="chaine_pate_precis('t3', '-');">⊖</span>
               </td>
@@ -508,7 +523,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               </td>
             </tr>
             <tr>
-              <td>
+              <td class="left-col">
                 <span class="signe t3 t4" onclick="chaine_pate_precis('t4', '+');">⊕</span>
                 <span class="signe t4 t5" onclick="chaine_pate_precis('t4', '-');">⊖</span>
               </td>
@@ -542,7 +557,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               </td>
             </tr>
             <tr>
-              <td>
+              <td class="left-col">
                 <span class="signe t4 t5" onclick="chaine_pate_precis('t5', '+');">⊕</span>
                 <span class="signe t5" onclick="chaine_pate_precis('t5', '-');">⊖</span>
               </td>
@@ -581,8 +596,9 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         <!-- 2eme tab -->
         <div id="content-2">
           <p>Ce formulaire permet de calculer le poids de l'eau et de la farine
-          sachant que l'on dispose d'une quantité donnée de levain.</p>
-          <table cellspacing="30">
+          sachant que l'on dispose d'un poids donné de levain.</p>
+          <br>
+          <table>
             <tr>
               <td><b>Entrées</b></td>
               <td><b>Résultats</b></td>
@@ -636,7 +652,8 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         <div id="content-3">
           <p>Ce formulaire permet de convertir une recette de pain à la levure
           en une recette de pain au levain.</p>
-          <table cellspacing="30">
+          <br>
+          <table>
             <tr>
               <td><b>Entrées</b></td>
               <td><b>Résultats</b></td>
