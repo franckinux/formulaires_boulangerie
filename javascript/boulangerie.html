@@ -375,7 +375,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
 
     <style type="text/css" media="print">
       * {
-        font-size: 10pt;
+        font-size: 12pt;
       }
 
       #content > div {
@@ -392,6 +392,13 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
 
       #container {
         width: 100%;
+      }
+
+      /* http://stackoverflow.com/questions/26792830/hiding-input-borders-in-print-stylesheet-chrome */
+      #container input {
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
       }
     </style>
   </head>
