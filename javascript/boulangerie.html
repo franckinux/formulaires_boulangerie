@@ -251,6 +251,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         }
       -->
     </script>
+
     <style type="text/css">
       /* styles pour les tabs : https://codepen.io/CesarGabriel/pen/nLhAa?editors=1000 */
       * {
@@ -369,6 +370,29 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
 
       .left-col {
         padding-right: 30px;
+      }
+    </style>
+
+    <style type="text/css" media="print">
+      * {
+        font-size: 10pt;
+      }
+
+      #content > div {
+        padding: 0px;
+      }
+
+      #container > label, #container > input {
+        display: none;
+      }
+
+      .left-col {
+        display: none;
+      }
+
+      #container {
+        width: 100%;
+      }
     </style>
   </head>
 
@@ -399,12 +423,12 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           <br>
           <table>
             <tr>
-              <td></td>
+              <td class="left-col"></td>
               <td><b>Entrées</b></td>
               <td><b>Résultats</b></td>
             </tr>
             <tr>
-              <td></td>
+              <td class="left-col"></td>
               <td>
                 <table>
                   <tr>
@@ -420,7 +444,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               <td></td>
             </tr>
             <tr>
-              <td></td>
+              <td class="left-col"></td>
               <td>
                 <table>
                   <tr>
