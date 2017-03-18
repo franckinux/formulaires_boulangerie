@@ -60,41 +60,35 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         };
 
         function is_valid_number(n, percent) {
-          if(!isNaN(n)) {
+          if (n == "") {
+            //alert("Entrée vide");
+            return false;
+          }
+          if (!isNaN(n)) {
             var v = parseFloat(n)
             if (v < 0) {
-              alert("Nombre négatif interdit");
+              //alert("Nombre négatif interdit");
               return false;
             }
             if (percent && v > 100) {
-              alert("Pourcentage supérieur à 100");
+              //alert("Pourcentage supérieur à 100");
               return false;
             }
             return true;
           } else {
-            alert("Format de nombre invalide");
+            //alert("Format de nombre invalide");
             return false;
           }
         };
 
-        function check_input(event, func, percent) {
-          if(is_valid_number(event.target.value, percent)) {
-            func();
+        function check_input(input, func, percent) {
+          if (is_valid_number(input.value, percent)) {
+            if (func) {
+              func();
+            }
           } else {
-            clear_results();
+            input.value = input.old;
           }
-        };
-
-        function check_input2(event, func, niveau, percent) {
-          if(is_valid_number(event.target.value, percent)) {
-            func();
-          } else {
-            clear_results2(niveau);
-          }
-        };
-
-        function check_input3(event, percent) {
-          is_valid_number(event.target.value, percent);
         };
 
         function calcul_pate_imposee(ptp, thp, thl, tlf, ts) {
@@ -465,11 +459,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                 <table>
                   <tr>
                     <td>Poids de la pâte</td>
-                    <td><input type="text" class="entree" id="ptp1" maxlength="6" oninput="check_input2(event, chaine_pate, 1, false);" value="1000"></td>
+                    <td><input type="text" class="entree" id="ptp1" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, false); this.old=this.value;" value="1000"></td>
                   </tr>
                   <tr>
                     <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree" id="thp1" maxlength="6" oninput="check_input2(event, chaine_pate, 1, true);" value="60"></td>
+                    <td><input type="text" class="entree" id="thp1" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, true); this.old=this.value;" value="60"></td>
                   </tr>
                 </table>
               </td>
@@ -481,11 +475,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                 <table>
                   <tr>
                     <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree" id="thl1" maxlength="6" oninput="check_input2(event, chaine_pate, 1, true);" value="100"></td>
+                    <td><input type="text" class="entree" id="thl1" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, true); this.old=this.value;" value="100"></td>
                   </tr>
                   <tr>
                     <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree" id="tlf1" maxlength="6" oninput="check_input2(event, chaine_pate, 1, true);" value="20"></td>
+                    <td><input type="text" class="entree" id="tlf1" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, true); this.old=this.value;" value="20"></td>
                   </tr>
                 </table>
               </td>
@@ -519,11 +513,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                 <table>
                   <tr>
                     <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree" id="thl2" maxlength="6" oninput="check_input2(event, chaine_pate, 2, true);" value="100"></td>
+                    <td><input type="text" class="entree" id="thl2" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, true); this.old=this.value;" value="100"></td>
                   </tr>
                   <tr>
                     <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree" id="tlf2" maxlength="6" oninput="check_input2(event, chaine_pate, 2, true);" value="20"></td>
+                    <td><input type="text" class="entree" id="tlf2" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, true); this.old=this.value;" value="20"></td>
                   </tr>
                 </table>
               </td>
@@ -553,11 +547,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                 <table>
                   <tr>
                     <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree" id="thl3" maxlength="6" oninput="check_input2(event, chaine_pate, 3, true);" value="100"></td>
+                    <td><input type="text" class="entree" id="thl3" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, true); this.old=this.value;" value="100"></td>
                   </tr>
                   <tr>
                     <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree" id="tlf3" maxlength="6" oninput="check_input2(event, chaine_pate, 3, true);" value="20"></td>
+                    <td><input type="text" class="entree" id="tlf3" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, true); this.old=this.value;" value="20"></td>
                   </tr>
                 </table>
               </td>
@@ -587,11 +581,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                 <table>
                   <tr>
                     <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree" id="thl4" maxlength="6" oninput="check_input2(event, chaine_pate, 4, true);" value="100"></td>
+                    <td><input type="text" class="entree" id="thl4" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, true); this.old=this.value;" value="100"></td>
                   </tr>
                   <tr>
                     <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree" id="tlf4" maxlength="6" oninput="check_input2(event, chaine_pate, 4, true);" value="20"></td>
+                    <td><input type="text" class="entree" id="tlf4" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, true); this.old=this.value;" value="20"></td>
                   </tr>
                 </table>
               </td>
@@ -621,11 +615,11 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                 <table>
                   <tr>
                     <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree" id="thl5" maxlength="6" oninput="check_input2(event, chaine_pate, 5, true);" value="100"></td>
+                    <td><input type="text" class="entree" id="thl5" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, true); this.old=this.value;" value="100"></td>
                   </tr>
                   <tr>
                     <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree" id="tlf5" maxlength="6" oninput="check_input2(event, chaine_pate, 5, true);" value="20"></td>
+                    <td><input type="text" class="entree" id="tlf5" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, chaine_pate, true); this.old=this.value;" value="20"></td>
                   </tr>
                 </table>
               </td>
@@ -664,19 +658,19 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                 <table>
                   <tr>
                     <td>Poids du levain</td>
-                    <td><input type="text" class="entree pl" maxlength="6" oninput="check_input(event, levain_impose, false);" value="150"></td>
+                    <td><input type="text" class="entree pl" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, levain_impose, false); this.old=this.value;" value="150"></td>
                   </tr>
                   <tr>
                     <td>Taux d'hydratation de la pâte <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree thp" maxlength="6" oninput="check_input(event, levain_impose, true);" value="60"></td>
+                    <td><input type="text" class="entree thp" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, levain_impose, true); this.old=this.value;" value="60"></td>
                   </tr>
                   <tr>
                     <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree thl" maxlength="6" oninput="check_input(event, levain_impose, true);" value="100"></td>
+                    <td><input type="text" class="entree thl" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, levain_impose, true); this.old=this.value;" value="100"></td>
                   </tr>
                   <tr>
                     <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree tlf" maxlength="6" oninput="check_input(event, levain_impose, true);" value="30"></td>
+                    <td><input type="text" class="entree tlf" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, levain_impose, true); this.old=this.value;" value="30"></td>
                   </tr>
                 </table>
               </td>
@@ -719,19 +713,19 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                 <table>
                   <tr>
                     <td>Poids de la farine</td>
-                    <td><input type="text" class="entree ptf" maxlength="6" oninput="check_input(event, pate_equivalente, false);" value="500"></td>
+                    <td><input type="text" class="entree ptf" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, pate_equivalente, false); this.old=this.value;" value="500"></td>
                   </tr>
                   <tr>
                     <td>Poids de l'eau</td>
-                    <td><input type="text" class="entree pte" maxlength="6" oninput="check_input(event, pate_equivalente, false);" value="300"></td>
+                    <td><input type="text" class="entree pte" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, pate_equivalente, false); this.old=this.value;" value="300"></td>
                   </tr>
                   <tr>
                     <td>Taux d'hydratation du levain <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree thl" maxlength="6" oninput="check_input(event, pate_equivalente, true);" value="70"></td>
+                    <td><input type="text" class="entree thl" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, pate_equivalente, true); this.old=this.value;" value="70"></td>
                   </tr>
                   <tr>
                     <td>Taux levain farine <span style="font-size: smaller;">(en %)</span></td>
-                    <td><input type="text" class="entree tlf" maxlength="6" oninput="check_input(event, pate_equivalente, true);" value="40"></td>
+                    <td><input type="text" class="entree tlf" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, pate_equivalente, true); this.old=this.value;" value="40"></td>
                   </tr>
                 </table>
               </td>
@@ -762,7 +756,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         <!-- 4eme tab -->
         <div id="content-4">
           <p>Taux de sel par rapport à la farine <span style="font-size: smaller;">(en %)</span>
-          <input type="text" class="entree" id="ts" maxlength="6" oninput="check_input3(event, true);" value="2"></p>
+          <input type="text" class="entree" id="ts" maxlength="6" onfocus="this.old=this.value;" oninput="check_input(this, null, true); this.old=this.value;" value="2"></p>
           <p>Titre de la page imprimée <input type="text" class="entree entree-texte" id="titre" size="100" onchange="copie();"></p>
         </div>
 
