@@ -122,7 +122,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
                 e.style.display = "table-cell";
               }
               if (t[i].tagName == "TD") {
-                t[i].style.borderTop = "1px solid #ccc";
+                t[i].style.borderTop = "3px solid #ccc";
             }
             }
           }
@@ -410,6 +410,10 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         outline: none !important;
       }
 
+      .imprimer {
+        display: block;
+      }
+
       .ne-pas-imprimer {
         display: none;
       }
@@ -440,8 +444,8 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
       <div id="content">
         <!-- 1er tab -->
         <div id="content-1">
-          <p>Ce formulaire permet de calculer le poids de l'eau et de la farine
-          pour obtenir une quantité de pâte donnée.</p>
+	  <p class="ne-pas-imprimer">Ce formulaire permet de calculer le poids
+	  de l'eau et de la farine pour obtenir une quantité de pâte donnée.</p>
           <br>
           <table>
             <tr>
@@ -641,8 +645,9 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
 
         <!-- 2eme tab -->
         <div id="content-2">
-          <p>Ce formulaire permet de calculer le poids de l'eau et de la farine
-          sachant que l'on dispose d'un poids donné de levain.</p>
+	  <p class="ne-pas-imprimer">Ce formulaire permet de calculer le poids
+	  de l'eau et de la farine sachant que l'on dispose d'un poids donné de
+	  levain.</p>
           <br>
           <table>
             <tr>
@@ -696,8 +701,8 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
 
         <!-- 3eme tab -->
         <div id="content-3">
-          <p>Ce formulaire permet de convertir une recette de pain à la levure
-          en une recette de pain au levain.</p>
+	  <p class="ne-pas-imprimer">Ce formulaire permet de convertir une
+	  recette de pain à la levure en une recette de pain au levain.</p>
           <br>
           <table>
             <tr>
