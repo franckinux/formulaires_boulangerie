@@ -399,10 +399,6 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         display: none;
       }
 
-      .left-col {
-        display: none;
-      }
-
       #container {
         width: 100%;
       }
@@ -414,8 +410,8 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
         outline: none !important;
       }
 
-      .imprimer {
-        display: block;
+      .ne-pas-imprimer {
+        display: none;
       }
     </style>
   </head>
@@ -449,12 +445,12 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
           <br>
           <table>
             <tr>
-              <td class="left-col"></td>
+              <td class="left-col ne-pas-imprimer"></td>
               <td><b>Entrées</b></td>
               <td><b>Résultats</b></td>
             </tr>
             <tr>
-              <td class="left-col"></td>
+              <td class="left-col ne-pas-imprimer"></td>
               <td>
                 <table>
                   <tr>
@@ -470,7 +466,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               <td></td>
             </tr>
             <tr>
-              <td class="left-col"></td>
+              <td class="left-col ne-pas-imprimer"></td>
               <td>
                 <table>
                   <tr>
@@ -505,7 +501,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               </td>
             </tr>
             <tr>
-              <td class="left-col">
+              <td class="left-col ne-pas-imprimer">
                 <span class="signe t1 t2" onclick="chaine_pate_precis('t2', '+');">⊕</span>
                 <span class="signe t2 t3" onclick="chaine_pate_precis('t2', '-');">⊖</span>
               </td>
@@ -539,7 +535,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               </td>
             </tr>
             <tr>
-              <td class="left-col">
+              <td class="left-col ne-pas-imprimer">
                 <span class="signe t2 t3" onclick="chaine_pate_precis('t3', '+');">⊕</span>
                 <span class="signe t3 t4" onclick="chaine_pate_precis('t3', '-');">⊖</span>
               </td>
@@ -573,7 +569,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               </td>
             </tr>
             <tr>
-              <td class="left-col">
+              <td class="left-col ne-pas-imprimer">
                 <span class="signe t3 t4" onclick="chaine_pate_precis('t4', '+');">⊕</span>
                 <span class="signe t4 t5" onclick="chaine_pate_precis('t4', '-');">⊖</span>
               </td>
@@ -607,7 +603,7 @@ copyright : Franck Barbenoire (franck@barbenoi.re)
               </td>
             </tr>
             <tr>
-              <td class="left-col">
+              <td class="left-col ne-pas-imprimer">
                 <span class="signe t4 t5" onclick="chaine_pate_precis('t5', '+');">⊕</span>
                 <span class="signe t5" onclick="chaine_pate_precis('t5', '-');">⊖</span>
               </td>
