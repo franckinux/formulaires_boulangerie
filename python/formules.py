@@ -226,16 +226,19 @@ if __name__ == "__main__":
     parser.add_argument('-i', "--iteratif", action="store_true", help="iteratif")
     args = parser.parse_args()
 
-    if args.test:
-        import doctest
-        doctest.testmod()
-    elif args.levain:
-        levain_impose()
-    elif args.pate:
-        pate_imposee()
-    elif args.equivalence:
-        equivalence()
-    elif args.iteratif:
-        iteratif()
-    else:
-        main()
+    try:
+        if args.test:
+            import doctest
+            doctest.testmod()
+        elif args.levain:
+            levain_impose()
+        elif args.pate:
+            pate_imposee()
+        elif args.equivalence:
+            equivalence()
+        elif args.iteratif:
+            iteratif()
+        else:
+            main()
+    except KeyboardInterrupt:
+        sys.exit(0)
