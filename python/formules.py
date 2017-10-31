@@ -89,7 +89,7 @@ def saisie_valeur(msg, percent=False):
             return v
         except ValueError:
             continue
-        except EOFError:
+        except (EOFError, KeyboardInterrupt):
             sys.exit(0)
 
 
@@ -125,7 +125,7 @@ def pate_imposee():
         print("\nPoids de farine : %.1f" % pf)
         print("Poids d'eau : %.1f" % pe)
         print("Poids du levain : %.1f" % pl)
-        print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel*100, ps))
+        print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel * 100, ps))
 
 
 def levain_impose():
@@ -140,7 +140,7 @@ def levain_impose():
         print("\nPoids de farine : %.1f" % pf)
         print("Poids d'eau : %.1f" % pe)
         print("Poids de la pâte : %.1f" % ptp)
-        print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel*100, ps))
+        print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel * 100, ps))
 
 
 def equivalence():
@@ -156,7 +156,7 @@ def equivalence():
         print("\nPoids de farine : %.1f" % pf)
         print("Poids d'eau : %.1f" % pe)
         print("Poids du levain : %.1f" % pl)
-        print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel*100, ps))
+        print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel * 100, ps))
 
 
 def iteratif():
@@ -175,19 +175,20 @@ def iteratif():
             print("Poids d'eau : %.1f" % pe)
             print("Poids du levain : %.1f" % pl)
             if i == 0:
-                print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel*100, ps))
+                print("Poids du sel (%.1f%% du poids total de farine) : %.1f" % (taux_sel * 100, ps))
             print("=====================================================")
 
         ptp = pl
         thp = thl
-        try:
-            _, thl, tlf = saisie_taux(pate=False)
-        except EOFError:
-            break
+        _, thl, tlf = saisie_taux(pate=False)
 
 
 def main():
-    choix = input("poids de la pâte / poids du levain / equivalence / itératif (p/l/e/i) : ")
+    try:
+        choix = input("poids de la pâte / poids du levain / equivalence / itératif (p/l/e/i) : ")
+    except (EOFError, KeyboardInterrupt):
+        sys.exit(0)
+
     if choix == 'p':
         pate_imposee()
     elif choix == 'l':
@@ -226,19 +227,16 @@ if __name__ == "__main__":
     parser.add_argument('-i', "--iteratif", action="store_true", help="iteratif")
     args = parser.parse_args()
 
-    try:
-        if args.test:
-            import doctest
-            doctest.testmod()
-        elif args.levain:
-            levain_impose()
-        elif args.pate:
-            pate_imposee()
-        elif args.equivalence:
-            equivalence()
-        elif args.iteratif:
-            iteratif()
-        else:
-            main()
-    except KeyboardInterrupt:
-        sys.exit(0)
+    if args.test:
+        import doctest
+        doctest.testmod()
+    elif args.levain:
+        levain_impose()
+    elif args.pate:
+        pate_imposee()
+    elif args.equivalence:
+        equivalence()
+    elif args.iteratif:
+        iteratif()
+    else:
+        main()
