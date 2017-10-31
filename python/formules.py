@@ -79,6 +79,20 @@ def calcul_equivalence(ptf, pte, thl, tlf):
 # fin des formules
 
 
+def saisie_valeur(msg, percent=False):
+    while True:
+        try:
+            v = input(msg)
+            v = float(v)
+            if percent:
+                v /= 100
+            return v
+        except ValueError:
+            continue
+        except EOFError:
+            sys.exit(0)
+
+
 def saisie_taux(pate=True, levain=True):
     """
     Saisie des différents taux :
@@ -88,23 +102,19 @@ def saisie_taux(pate=True, levain=True):
     Conversion dans l'intervalle [0-1]
     """
     if pate:
-        thp = input("Taux d'hydratation de la pâte (%) : ")
-        thp = float(thp) / 100
+        thp = saisie_valeur("Taux d'hydratation de la pâte (%) : ", percent=True)
     else:
         thp = None
     if levain:
-        thl = input("Taux d'hydratation du levain (%) : ")
-        thl = float(thl) / 100
+        thl = saisie_valeur("Taux d'hydratation du levain (%) : ", percent=True)
     else:
         thl = None
-    tlf = input("Taux de farine du levain par rapport à la farine (%) : ")
-    tlf = float(tlf) / 100
+    tlf = saisie_valeur("Taux de farine du levain par rapport à la farine (%) : ", percent=True)
     return thp, thl, tlf
 
 
 def pate_imposee():
-    ptp = input("Poids de la pâte à obtenir : ")
-    ptp = float(ptp)
+    ptp = saisie_valeur("Poids de la pâte à obtenir : ")
 
     thp, thl, tlf = saisie_taux()
     pf, pe, pl, ps = calcul_pate_imposee(ptp, thp, thl, tlf)
@@ -119,8 +129,7 @@ def pate_imposee():
 
 
 def levain_impose():
-    pl = input("Poids du levain : ")
-    pl = float(pl)
+    pl = saisie_valeur("Poids du levain : ")
 
     thp, thl, tlf = saisie_taux()
     pf, pe, ptp, ps = calcul_levain_impose(pl, thp, thl, tlf)
@@ -135,10 +144,8 @@ def levain_impose():
 
 
 def equivalence():
-    ptf = input("Poids de la farine : ")
-    ptf = float(ptf)
-    pte = input("Poids de l'eau : ")
-    pte = float(pte)
+    ptf = saisie_valeur("Poids de la farine : ")
+    pte = saisie_valeur("Poids de l'eau : ")
 
     thp, thl, tlf = saisie_taux(pate=False)
     pf, pe, pl, ps = calcul_equivalence(ptf, pte, thl, tlf)
@@ -153,8 +160,7 @@ def equivalence():
 
 
 def iteratif():
-    ptp = input("Poids de la pâte à obtenir : ")
-    ptp = float(ptp)
+    ptp = saisie_valeur("Poids de la pâte à obtenir : ")
 
     thp, thl, tlf = saisie_taux()
 
